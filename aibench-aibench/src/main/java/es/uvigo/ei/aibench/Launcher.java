@@ -140,8 +140,8 @@ public class Launcher {
 	}
 
 	private static void configure() {
-		URL url = Util.getGlobalResourceURL(Paths.getInstance().getLog4jConfigurationPath());
-		PropertyConfigurator.configure(url);
+//		URL url = Util.getGlobalResourceURL(Paths.getInstance().getLog4jConfigurationPath());
+//		PropertyConfigurator.configure(url);
 	}
 
 	/**
@@ -175,8 +175,8 @@ public class Launcher {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				logger.info("Shutting down plugin engine");
-				Launcher.getPluginEngine().shutdown();
+//				logger.info("Shutting down plugin engine");
+//				Launcher.getPluginEngine().shutdown();
 			}
 		});
 

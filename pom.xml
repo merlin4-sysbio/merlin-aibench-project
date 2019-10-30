@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>es.uvigo.ei.sing</groupId>
-	<artifactId>aibench-project</artifactId>
-	<version>2.10.2</version>
+	<groupId>pt.uminho.ceb.biosystems.merlin</groupId>
+	<artifactId>merlin-aibench-project</artifactId>
+	<version>2.10.2-SNAPSHOT</version>
 	<!--
 		WARNING: change version using:
 			mvn versions:set -DnewVersion=[new_version]
@@ -21,12 +21,6 @@
 	<inceptionYear>2006</inceptionYear>
 	<url>http://www.aibench.org</url>
 	<packaging>pom</packaging>
-
-  <scm>
-    <url>https://github.com/sing-group/aibench-project</url>
-    <connection>scm:git:git://github.com/sing-group/aibench-project.git</connection>
-    <developerConnection>scm:git:git@github.com:sing-group/aibench-project.git</developerConnection>
-  </scm>
 
 	<developers>
 		<developer>
@@ -103,14 +97,6 @@
 		<license.addJavaLicenseAfterPackage>false</license.addJavaLicenseAfterPackage>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>sing-repository</id>
-			<name>SING repository</name>
-			<url>https://maven.sing-group.org/repository/maven/</url>
-		</repository>
-	</repositories>
-
 	<modules>
 		<module>aibench-aibench</module>
 		<module>aibench-core</module>
@@ -124,37 +110,37 @@
 		<dependencies>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-aibench</artifactId>
+				<artifactId>merlin-aibench-aibench</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-core</artifactId>
+				<artifactId>merlin-aibench-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-workbench</artifactId>
+				<artifactId>merlin-aibench-workbench</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-shell</artifactId>
+				<artifactId>merlin-aibench-shell</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-pluginmanager</artifactId>
+				<artifactId>merlin-aibench-pluginmanager</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aibench-archetype</artifactId>
+				<artifactId>merlin-aibench-archetype</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
@@ -348,4 +334,33 @@
       </distributionManagement>
     </profile>
   </profiles>
+  
+  <repositories>
+		<repository>
+			<id>nexus</id>
+			<name>Nexus BioSystems Server</name>
+			<url>https://nexus.bio.di.uminho.pt/content/groups/public/</url>
+	        <releases>
+	           <enabled>true</enabled>
+	        </releases>
+		</repository>
+
+		<repository>
+			<id>sing-repository</id>
+			<name>SING repository</name>
+			<url>http://maven.sing-group.org/repository/maven/</url>
+		</repository>
+	</repositories>
+	
+  
+  <distributionManagement>
+		<snapshotRepository>
+			<id>biosystems-snapshots</id>
+			<url>https://nexus.bio.di.uminho.pt/content/repositories/biosystems-snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>biosystems-releases</id>
+			<url>https://nexus.bio.di.uminho.pt/content/repositories/biosystems-releases</url>
+		</repository>
+	</distributionManagement>
 </project>

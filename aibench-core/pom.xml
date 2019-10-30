@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>es.uvigo.ei.sing</groupId>
-		<artifactId>aibench-project</artifactId>
-		<version>2.10.2</version>
+		<groupId>pt.uminho.ceb.biosystems.merlin</groupId>
+		<artifactId>merlin-aibench-project</artifactId>
+		<version>2.10.2-SNAPSHOT</version>
 		<!--
 			WARNING: change version using (in the parent project):
 				mvn versions:set -DnewVersion=[new_version]
@@ -16,7 +16,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>aibench-core</artifactId>
+	<artifactId>merlin-aibench-core</artifactId>
 	<packaging>jar</packaging>
 	<name>The AIBench Core Plugin</name>
 	<url>http://www.aibench.org</url>
@@ -29,7 +29,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>aibench-aibench</artifactId>
+			<artifactId>merlin-aibench-aibench</artifactId>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

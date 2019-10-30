@@ -22,13 +22,20 @@
 package es.uvigo.ei.aibench;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.awt.GraphicsDevice.WindowTranslucency;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -60,6 +67,9 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 	private Image fImage;
 
 	private int current = 0, toStart = 0;
+	
+	private boolean	translucent	= false;
+
 
 	/**
 	 * Creates the splash frame. Do not shows it. Call {@link #setVisible(boolean) setVisible} to do so.
@@ -75,12 +85,23 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 	}
 
 	private void initialize() {
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		translucent = gd.isWindowTranslucencySupported(WindowTranslucency.PERPIXEL_TRANSLUCENT);
+		
+		if (es.uvigo.ei.aibench.Launcher.CONFIG.containsKey("application.icon.16") && es.uvigo.ei.aibench.Launcher.CONFIG.containsKey("application.icon.32")) {
+			List<Image> icons = new ArrayList<Image>();
+			ImageIcon icon16 = new ImageIcon(es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("application.icon.16"));
+			icons.add(icon16.getImage());
+			ImageIcon icon32 = new ImageIcon(es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("application.icon.32"));
+			icons.add(icon32.getImage());
+			setIconImages(icons);
+		}
 
 		this.setLayout(new BorderLayout());
-		this.add(getJContentPane(), BorderLayout.CENTER);
+		this.add(getJContentPane(), BorderLayout.NORTH);
 		this.setSize(fImage.getWidth(null), fImage.getHeight(null) + 10);
 		this.add(progress, BorderLayout.SOUTH);
-		this.setTitle("Welcome to AIBench");
+		this.setTitle("Welcome to merlin");
 
 		// Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		// Rectangle window = getBounds();
@@ -89,6 +110,12 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 
 		this.setAlwaysOnTop(true);
 		this.setUndecorated(true);
+		// this.setOpacity(opacity)
+		if (translucent)
+			this.setBackground(new Color(255, 255, 255, 0));
+		else
+			this.setBackground(new Color(255, 255, 255, 255));
+
 		this.pack();
 
 		this.setLocationRelativeTo(null);
@@ -103,20 +130,21 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 						.getLocation();
 				try {
 					if (imageURL.getFile().endsWith(".jar")) {
-						imageURL = new URL(imageURL.toString().substring(0,
-								imageURL.toString().lastIndexOf('/'))
-								+ "/../"
-								+ Launcher.CONFIG.getProperty("splashimage"));
+						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //original
+//						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //odias
 					} else {
-						imageURL = new URL(imageURL + "../"
-								+ Launcher.CONFIG.getProperty("splashimage"));
+//						imageURL = new URL(imageURL + "../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //original
+						imageURL = new URL(imageURL + "../../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //odias
 					}
 
 				} catch (MalformedURLException e1) {
-					System.err
-							.println("Not found the specified splash image, searching in url: "
-									+ imageURL.getFile() + "using default");
-					imageURL = SplashFrame.class.getResource("/splash.jpg");
+//					System.err
+//					.println("Not found the specified splash image, searching in url: "
+//							+ imageURL.getFile() + "using default");
+//					imageURL = SplashFrame.class.getResource("/splash.jpg");
+					
+                    System.err.println("Not found the specified splash image, searching in url: " + imageURL.getFile() + "using default");
+
 				}
 
 			} else {
@@ -158,6 +186,11 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 			};
 			jContentPane.setLayout(null);
 			jContentPane.setOpaque(true);
+			if (translucent)
+				jContentPane.setBackground(new Color(255, 255, 255, 0));
+			else
+				jContentPane.setBackground(new Color(255, 255, 255, 0));
+
 			jContentPane.setPreferredSize(new java.awt.Dimension(fImage
 					.getWidth(null), fImage.getHeight(null)));
 		}
@@ -186,7 +219,7 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 		} else if (evt.getEventType().equals(PluginEngineEventType.PLUGIN_STARTED)
 				|| evt.getEventType().equals(PluginEngineEventType.PLUGIN_DISABLED)) {
 			this.progress.setValue(++this.current);
-			
+
 			if (this.toStart == this.current) {
 				this.setVisible(false);
 				this.dispose();
