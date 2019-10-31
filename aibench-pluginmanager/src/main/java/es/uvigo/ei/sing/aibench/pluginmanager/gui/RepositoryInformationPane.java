@@ -168,7 +168,7 @@ public class RepositoryInformationPane extends JScrollPane {
 				Color installable = new Color(100, 100, 200);
 				Color updatable = new Color(100, 200, 100);
 				Color depInstallable = new Color(150, 150, 220);
-				Color depUpdatable = new Color(150, 220, 150);
+				Color depUpdatable = new Color(0, 128, 128);
 				Color depLost = new Color(200, 125, 125);
 				
 				Object row = RepositoryInformationPane.this.pluginsTreeTable.getPathForRow(adapter.row).getLastPathComponent();

@@ -67,6 +67,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.jdesktop.beans.AbstractBean;
 import org.jdesktop.swingx.painter.Painter;
 

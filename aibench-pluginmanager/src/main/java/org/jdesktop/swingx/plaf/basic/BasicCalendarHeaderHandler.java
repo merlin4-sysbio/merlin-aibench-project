@@ -42,8 +42,6 @@
  */
 package org.jdesktop.swingx.plaf.basic;
 
-import javax.swing.Action;
-
 import org.jdesktop.swingx.JXMonthView;
 
 

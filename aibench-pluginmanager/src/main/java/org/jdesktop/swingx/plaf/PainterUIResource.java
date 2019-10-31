@@ -43,8 +43,10 @@
 package org.jdesktop.swingx.plaf;
 
 import java.awt.Graphics2D;
+
 import javax.swing.JComponent;
 import javax.swing.plaf.UIResource;
+
 import org.jdesktop.swingx.painter.Painter;
 
 /**

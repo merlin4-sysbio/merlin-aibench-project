@@ -1,26 +1,34 @@
 /*
- * #%L
- * The AIBench Plugin Manager Plugin
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * PluginManager.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 30/03/2009
  */
 package es.uvigo.ei.sing.aibench.pluginmanager;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -43,18 +50,24 @@ import org.platonos.pluginengine.version.PluginVersion;
 import es.uvigo.ei.aibench.Launcher;
 import es.uvigo.ei.aibench.Paths;
 import es.uvigo.ei.aibench.repository.NotInitializedException;
-import es.uvigo.ei.aibench.repository.PluginDownloadAdapter;
+import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent;
+import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.repository.PluginDownloader;
 import es.uvigo.ei.aibench.repository.PluginInstaller;
+import es.uvigo.ei.aibench.repository.info.DependencyInfo;
 import es.uvigo.ei.aibench.repository.info.InstallInfo;
 import es.uvigo.ei.aibench.repository.info.PluginInfo;
+import es.uvigo.ei.sing.aibench.pluginmanager.gui2.NeedsRestartListener;
+import es.uvigo.ei.sing.aibench.pluginmanager.utils.FileManager;
 
 /**
  * @author Miguel Reboiro Jato
+ * @author Hugo Costa ( Adapt)
+ * @author Hugo Giesteira ( Adapt)
  *
  */
-public final class PluginManager extends PluginDownloadAdapter {
+public final class PluginManager implements PluginDownloadListener{
 	/**
 	 * 
 	 */
@@ -81,7 +94,17 @@ public final class PluginManager extends PluginDownloadAdapter {
 	 */
 	private static final String PROPERTY_PLUGININSTALLER_DIR = "plugininstaller.dir";
 	
+	private static final String PROPERTY_BASE_APPLICATION_DIR = "base.application.dir";
+	
+	private static final String PROPERTY_START_AUTO_UPDATES = "plugins.start.gui";
+	
+	private static final String PROPERTY_PLUGIN_TIMEOUT = "pluginmanager.timeout";
+	
+	private static final String PROPERTY_PLUGIN_BACKUP_REPOSITORY_HOST = "backupdarepository.host";
+	
 	private static PluginManager instance;
+	
+	private ArrayList<NeedsRestartListener> listeners = new ArrayList<NeedsRestartListener>();
 	private synchronized final static void createInstance() {
 		if (PluginManager.instance == null) {
 			PluginManager.instance = new PluginManager();
@@ -106,51 +129,36 @@ public final class PluginManager extends PluginDownloadAdapter {
 	private String host;
 	private String infoFile;
 	private String installDir;
+	private String baseProgramDir;
 	private String[] ignoreDirs;
 	private boolean deleteInvalidInstalls;
+	private boolean detectAutoUpdate;
+	private String timeout;
+	private String backupHost;
 	
 	private PluginDownloader downloader;
 	private PluginInstaller installer;
-	
-	private final List<PluginManagerListener> listeners;
+	private int contUpdated;
+	private int numToDownload;
 	
 	private PluginManager() {
 		this.pluginEngine = Launcher.getPluginEngine();
 		this.pluginConfiguration = this.pluginEngine.getPluginConfiguration();
-		this.listeners = new Vector<PluginManagerListener>();
 		
 		this.properties = new Properties();
-//		try {
-//			this.properties.load(new FileInputStream(PluginManager.PROPERTIES_FILE));
-//			this.host = this.properties.getProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST);
-//			this.infoFile = this.properties.getProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_INFOFILE);
-//			this.installDir = this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_DIR);
-//			this.deleteInvalidInstalls = Boolean.parseBoolean(this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_DELETE_INVALID_INSTALLS, "true"));
-//			
-//			String ignoreDirs = this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_IGNORE_DIRS);
-//			if (ignoreDirs != null && ignoreDirs.trim().length() > 0) {
-//				this.ignoreDirs = ignoreDirs.split(";");
-//			} else {
-//				this.ignoreDirs = null;
-//			}
-//			
-//			
-//			this.initPluginInstaller();
-//			this.initPluginDownloader();
-//		} catch (FileNotFoundException fnfe) {
-//			PluginManager.logger.error("Properties file not found: " + PluginManager.PROPERTIES_FILE, fnfe);
-//		} catch (IOException ioe) {
-//			PluginManager.logger.error("Error in plugin downloader: " + ioe.getMessage(), ioe);
-//		} catch (IllegalArgumentException iae) {
-//			PluginManager.logger.error("Error in plugin installer: " + iae.getMessage(), iae);
-//		}
-		
 		try {
 			this.properties.load(new FileInputStream(PluginManager.PROPERTIES_FILE));
 			this.host = this.properties.getProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST);
 			this.infoFile = this.properties.getProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_INFOFILE);
 			this.installDir = this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_DIR);
+			this.baseProgramDir = this.properties.getProperty(PluginManager.PROPERTY_BASE_APPLICATION_DIR);
+			this.timeout = this.properties.getProperty(PluginManager.PROPERTY_PLUGIN_TIMEOUT);
+			this.backupHost = this.properties.getProperty(PluginManager.PROPERTY_PLUGIN_BACKUP_REPOSITORY_HOST);
+			if(baseProgramDir == null)
+				baseProgramDir = ".";
+			
 			this.deleteInvalidInstalls = Boolean.parseBoolean(this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_DELETE_INVALID_INSTALLS, "true"));
+			this.detectAutoUpdate = Boolean.parseBoolean(this.properties.getProperty(PluginManager.PROPERTY_START_AUTO_UPDATES, "true"));
 			
 			String ignoreDirs = this.properties.getProperty(PluginManager.PROPERTY_PLUGININSTALLER_IGNORE_DIRS);
 			if (ignoreDirs != null && ignoreDirs.trim().length() > 0) {
@@ -158,16 +166,22 @@ public final class PluginManager extends PluginDownloadAdapter {
 			} else {
 				this.ignoreDirs = null;
 			}
-
+			
+			
 			this.initPluginInstaller();
-			this.initPluginDownloader(this.host, this.infoFile, this.installDir);
+			this.initPluginDownloader();
+			downloader.addDownloadListener(this);
 		} catch (FileNotFoundException fnfe) {
 			PluginManager.logger.error("Properties file not found: " + PluginManager.PROPERTIES_FILE, fnfe);
 		} catch (IOException ioe) {
-			PluginManager.logger.error("Error in plugin downloader: " + ioe.getMessage(), ioe);
+//			PluginManager.logger.error("Error in plugin downloader: " + ioe.getMessage(), ioe);
+			PluginManager.logger.error("No internet Connection");
 		} catch (IllegalArgumentException iae) {
 			PluginManager.logger.error("Error in plugin installer: " + iae.getMessage(), iae);
+		} catch (NotInitializedException nie) {
+			PluginManager.logger.error("Error in plugins.dat: " + nie.getMessage(), nie);
 		}
+
 	}
 	
 	/*-************************* PLUGIN MANAGER *************************-*/
@@ -183,12 +197,24 @@ public final class PluginManager extends PluginDownloadAdapter {
 		return this.installDir;
 	}
 	
+	public String getTimeout() {
+		return this.timeout;
+	}
+	
+	public boolean isStartAutoUpdates(){
+		return detectAutoUpdate;
+	}
+	
 	private void storeProperties() {
 		try {
 			this.properties.store(new FileOutputStream(PluginManager.PROPERTIES_FILE), null);
 		} catch (IOException ioe) {
 			PluginManager.logger.error("Properties file not found: " + PluginManager.PROPERTIES_FILE, ioe);
 		}
+	}
+	
+	public String getBackupHost() {
+		return this.backupHost;
 	}
 	/*-*********************** END PLUGIN MANAGER ***********************-*/
 	
@@ -300,146 +326,94 @@ public final class PluginManager extends PluginDownloadAdapter {
 	/*-*********************** END PLUGIN ENGINE ***********************-*/
 	
 	/*-*********************** PLUGIN DOWNLOADER ***********************-*/
-	private void initPluginDownloader(String host, String infoFile, String installDir) {
+	public void initPluginDownloader()
+	throws IOException {
 		try {
 			this.downloaderLock.writeLock().lock();
 			
-			if (host == null) {
+			if (this.host == null) {
 				throw new NotInitializedException("Error creating PluginDownloader: Host isn't set.");
-			} else if (installDir == null) {
+			} else if (this.installDir == null) {
 				throw new NotInitializedException("Error creating PluginDownloader: Install directory isn't set.");
 			} else {
-				final PluginDownloader downloader;
-				if (infoFile == null) {
-					downloader = new PluginDownloader(host, installDir);
-				} else {
-					downloader = new PluginDownloader(host, infoFile, installDir);
+				try {
+					if (this.infoFile == null) {
+						this.downloader = new PluginDownloader(this.host, this.installDir);
+					} else {
+						this.downloader = new PluginDownloader(this.host, this.infoFile, this.installDir);
+					}
+					int timeout = 5;
+					if(this.timeout != null){
+						try { 
+					        timeout = Integer.parseInt(this.timeout); 
+					    } catch(NumberFormatException e) {  
+					    	timeout = 5;
+					    }
+					}
+//					this.downloader.setBackupHost(this.backupHost);
+//					this.downloader.setTimeout(timeout);
+					this.downloader.downloadInfo();
+				} catch (IOException ioe) {
+//					PluginManager.logger.error("Error creating PluginDownloader: " + ioe.getMessage(), ioe);
+					this.downloader = null;
+					throw ioe;
 				}
-				
-				downloader.addDownloadListener(this);
-				new Thread() {
-					public void run() {
-						try {
-							downloader.downloadInfo();
-						} catch (IOException ioe) {
-//							PluginManager.logger.error("Error downloading repository info: " + ioe.getMessage(), ioe);
-						}
-					};
-				}.start();
 			}
-		} finally {
-			this.downloaderLock.writeLock().unlock();
-		}
-//		try {
-//			this.downloaderLock.writeLock().lock();
-//			
-//			if (this.host == null) {
-//				throw new NotInitializedException("Error creating PluginDownloader: Host isn't set.");
-//			} else if (this.installDir == null) {
-//				throw new NotInitializedException("Error creating PluginDownloader: Install directory isn't set.");
-//			} else {
-//				if (this.infoFile == null) {
-//					this.downloader = new PluginDownloader(this.host, this.installDir);
-//				} else {
-//					this.downloader = new PluginDownloader(this.host, this.infoFile, this.installDir);
-//				}
-//				
-//				new Thread() {
-//					public void run() {
-//						try {
-//							PluginManager.this.downloader.downloadInfo();
-//						} catch (IOException ioe) {
-//							PluginManager.logger.error("Error downloading repository info: " + ioe.getMessage(), ioe);
-//							PluginManager.this.downloader = null;
-//						}
-//					};
-//				}.start();
-//			}
-//		} finally {
-//			this.downloaderLock.writeLock().unlock();
-//		}
-	}
-
-	/* (non-Javadoc)
-	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadInfoError(es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent)
-	 */
-	public void downloadInfoError(PluginDownloadInfoEvent event) {
-		this.notifyDownloaderChangeError(event.getSource(), event.getException());
-		PluginManager.logger.error("Error downloading repository info: " + event.getException().getMessage(), event.getException());
-	}
-
-	/* (non-Javadoc)
-	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadInfoFinished(es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent)
-	 */
-	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
-		try {
-			this.downloaderLock.writeLock().lock();
-			
-			if (event.getSource() != this.downloader) {
-				final PluginDownloader old = this.downloader;
-				
-				if (old != null)
-					old.cancelDownloads();
-				
-				this.downloader = event.getSource();
-				this.host = this.downloader.getHost();
-				this.infoFile = this.downloader.getInfoFile();
-				this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST, this.host);
-				this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_INFOFILE, this.infoFile);
-				this.storeProperties();
-				
-				this.notifyDownloaderChanged(old);
-				
-				if (old == null)
-					PluginManager.logger.info("Download manager initialized: " + this.host);
-				else
-					PluginManager.logger.info("Download manager changed. New URL: " + this.host);
-			}
-		} finally {
-			this.downloaderLock.writeLock().unlock();			
-		}			
-	}
-	
-	public void setPluginRepository(String host) {
-//		String currentHost = this.host;
-		try {
-			this.downloaderLock.writeLock().lock();
-			
-			
-//			this.host = host;
-			this.initPluginDownloader(host, null, this.installDir);
-		
-//			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST, this.host);
-//			this.storeProperties();
-//		} catch(IOException ioe) {
-//			this.downloader = null;
-//			this.host = currentHost;
-//			try {
-//				this.initPluginDownloader();
-//			} catch(IOException e) {}
-//			throw ioe;
 		} finally {
 			this.downloaderLock.writeLock().unlock();
 		}
 	}
 	
-	public void setPluginRepository(String host, String infoFile) {
+	public void setPluginRepository(String host)
+	throws IOException {
+		String currentHost = this.host;
 		try {
 			this.downloaderLock.writeLock().lock();
 			
-//			this.host = host;
-//			this.infoFile = infoFile;
-//			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST, this.host);
-//			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_INFOFILE, this.infoFile);
-//			this.storeProperties();
+			
+			this.host = host;
+			this.initPluginDownloader();
 		
-			this.initPluginDownloader(host, infoFile, this.installDir);
-//		} catch(IOException ioe) {
-//			this.downloader = null;
-//			throw ioe;
+			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST, this.host);
+			this.storeProperties();
+		} catch(IOException ioe) {
+			this.downloader = null;
+			this.host = currentHost;
+			try {
+				this.initPluginDownloader();
+			} catch(IOException e) {
+				
+			}
+			throw ioe;
 		} finally {
 			this.downloaderLock.writeLock().unlock();
 		}
+	}
+	
+	public void setPluginRepository(String host, String infoFile)
+	throws IOException {
+		try {
+			this.downloaderLock.writeLock().lock();
+			
+			this.host = host;
+			this.infoFile = infoFile;
+			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_HOST, this.host);
+			this.properties.setProperty(PluginManager.PROPERTY_PLUGINREPOSITORY_INFOFILE, this.infoFile);
+			this.storeProperties();
+		
+			this.initPluginDownloader();
+		} catch(IOException ioe) {
+			this.downloader = null;
+			throw ioe;
+		} finally {
+			this.downloaderLock.writeLock().unlock();
+		}
+	}
+	
+	public void setTimeout(String timeout) {
+		this.timeout = timeout;
+		this.properties.setProperty(PluginManager.PROPERTY_PLUGIN_TIMEOUT, timeout);
+		this.storeProperties();
 	}
 	
 	public boolean isDownloaderActive() {
@@ -524,6 +498,7 @@ public final class PluginManager extends PluginDownloadAdapter {
 	public boolean hasUpdateAvailable(Plugin plugin)
 	throws NotInitializedException {
 		try {
+			
 			this.downloaderLock.readLock().lock();
 			
 			PluginDownloader downloader = this.getPluginDownloader();
@@ -589,26 +564,72 @@ public final class PluginManager extends PluginDownloadAdapter {
 		}
 	}
 	
+	/**
+	 * Changed by Hugo Costa... for waiting all dependencies downloaded and after do updateListeners
+	 * 
+	 * @param plugin
+	 * @throws NotInitializedException
+	 */
 	public void downloadPlugin(PluginInfo plugin) 
 	throws NotInitializedException {
+		
+		List<DependencyInfo> listOfDependences = getListNeedsToDownload(plugin);
+		this.numToDownload = 1 + listOfDependences.size();
+		this.contUpdated = 0;
 		try {
 			this.downloaderLock.readLock().lock();
-			this.installDirectoryLock.writeLock().lock();
-			
-			this.getPluginDownloader().downloadPlugin(plugin);
+			this.installDirectoryLock.writeLock().lock();		
+			this.downloader.downloadPlugin(plugin);
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
-		}
+		}	
+		installDeps(listOfDependences);
+//		updateListeners();
 	}
 	
-	public void downloadPlugin(String uid) 
+	public List<DependencyInfo> getListNeedsToDownload(PluginInfo plugin)
+	{
+		List<DependencyInfo> dependencesNeed = new ArrayList<DependencyInfo>();
+		List<DependencyInfo> alldependences = plugin.getListNeeds();
+		for(DependencyInfo dinfo:alldependences)
+		{
+			String uid = dinfo.getUid();
+			PluginVersion version = dinfo.getDependencyVersion();
+			Plugin plug = Launcher.getPluginEngine().getPlugin(uid);
+			if(plug==null)
+			{
+				dependencesNeed.add(dinfo);
+			}
+			else
+			{
+				PluginVersion plugversion = plug.getVersion();
+				int compare = plugversion.compareTo(version);
+				if(compare<0)
+				{
+					dependencesNeed.add(dinfo);
+				}	
+			}
+		}	
+		return dependencesNeed;
+	}
+	
+	public void installDeps(List<DependencyInfo> list){
+		
+		if(list != null)
+			for(DependencyInfo d:list){
+				String uid = d.getUid();
+				downloadPluginDep(uid);
+			}	
+	}
+	
+	public void downloadPluginDep(String uid) 
 	throws NotInitializedException, IllegalArgumentException {
 		try {
 			this.downloaderLock.readLock().lock();
-			this.installDirectoryLock.writeLock().lock();
-			
-			this.getPluginDownloader().downloadPlugin(uid);
+			this.installDirectoryLock.writeLock().lock();	
+			this.downloader.downloadPlugin(uid);
+//			updateListeners();
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
@@ -621,7 +642,8 @@ public final class PluginManager extends PluginDownloadAdapter {
 			this.downloaderLock.readLock().lock();
 			this.installDirectoryLock.writeLock().lock();
 			
-			this.getPluginDownloader().downloadPlugin(plugin, updatePlugin);
+			this.downloader.downloadPlugin(plugin, updatePlugin);
+			updateListeners();
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
@@ -634,7 +656,8 @@ public final class PluginManager extends PluginDownloadAdapter {
 			this.downloaderLock.readLock().lock();
 			this.installDirectoryLock.writeLock().lock();
 			
-			this.getPluginDownloader().downloadPlugin(uid, updatePlugin);
+			this.downloader.downloadPlugin(uid, updatePlugin);
+			updateListeners();
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
@@ -647,7 +670,7 @@ public final class PluginManager extends PluginDownloadAdapter {
 			this.downloaderLock.readLock().lock();
 			this.installDirectoryLock.writeLock().lock();
 			
-			this.getPluginDownloader().cancelDownload(downloadId);
+			this.downloader.cancelDownload(downloadId);
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
@@ -660,7 +683,7 @@ public final class PluginManager extends PluginDownloadAdapter {
 			this.downloaderLock.readLock().lock();
 			this.installDirectoryLock.writeLock().lock();
 			
-			this.getPluginDownloader().cancelDownloads();
+			this.downloader.cancelDownloads();
 		} finally {
 			this.installDirectoryLock.writeLock().unlock();
 			this.downloaderLock.readLock().unlock();
@@ -673,8 +696,6 @@ public final class PluginManager extends PluginDownloadAdapter {
 	throws IllegalArgumentException {
 		try {
 			this.installerLock.writeLock().lock();
-			final PluginInstaller old = this.installer;
-			
 			if (this.installDir != null && Launcher.pluginsDir != null) {
 				if (this.ignoreDirs == null) {
 					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir);
@@ -682,11 +703,7 @@ public final class PluginManager extends PluginDownloadAdapter {
 					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir, this.ignoreDirs);
 				}
 			}
-			
-			this.notifyInstallerChanged(old);
 		} catch (IllegalArgumentException iae) {
-			this.notifyInstallerChangeError(null, iae);
-			
 			PluginManager.logger.error("Error creating PluginInstaller: " + iae.getMessage(), iae);
 			this.installer = null;
 			throw iae;
@@ -705,7 +722,7 @@ public final class PluginManager extends PluginDownloadAdapter {
 			this.properties.setProperty(PluginManager.PROPERTY_PLUGININSTALLER_DIR, this.installDir);
 			this.storeProperties();
 
-			this.initPluginDownloader(this.host, this.infoFile, this.installDir);
+			this.initPluginDownloader();
 			this.initPluginInstaller();				
 		} finally {
 			this.installerLock.writeLock().unlock();
@@ -816,58 +833,183 @@ public final class PluginManager extends PluginDownloadAdapter {
 		}
 	}
 	/*-********************* END PLUGIN INSTALLER **********************-*/
+	
+	
 
-	private void notifyInstallerChanged(PluginInstaller old) {
-		synchronized(this.listeners) {
-			final PluginManagerEvent event = new PluginManagerEvent(old, this.installer);
-			
-			for (PluginManagerListener listener:this.listeners) {
-				listener.installerChanged(event);
+
+	
+	/**
+	 * @author Paulo Vilaca
+	 * 
+	 * @return
+	 */
+	public boolean isAllDependenciesInstaled(PluginInfo p){
+		
+		boolean ret = true;
+		List<DependencyInfo> dps = getListNeedsToDownload(p);
+		
+		for(DependencyInfo d : dps){
+			ret = isDependencieValid(d);
+			if(!ret) break;
+		}
+		
+		return ret;
+	}
+	
+	public boolean isDependencieValid(DependencyInfo depInfo){
+		
+		boolean ret = false;
+		
+		String uid = depInfo.getUid();
+		String version = depInfo.getVersion();
+		Plugin pDep = PluginManager.getInstance().getInstalledPlugin(uid);
+		PluginVersion depVersion;
+		try {
+			depVersion = PluginVersion.createInstanceVersion(version);
+			if(pDep != null && pDep.getVersion().compareTo(depVersion) <= 0)
+				ret = true;
+		} catch (PluginEngineException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
+	
+	
+	/**
+	 * @author Hugo Costa
+	 * 
+	 * @return
+	 * @throws IOException 
+	 * @throws NotInitializedException 
+	 */
+	public List<Plugin> existUpdatesFromRepository(boolean hasTimeout) throws NotInitializedException, IOException
+	{
+		// Refresh Settings
+		PluginManager.getInstance().getPluginDownloader().downloadInfo();
+		List<Plugin> toUpdate = new ArrayList<Plugin>();
+		Collection<PluginInfo> repository = getPluginDownloader().getPluginsInfo();
+		for(PluginInfo pluginInfo:repository)
+		{
+			Plugin plugin = getPlugin(pluginInfo.getUID());
+			if(plugin!= null && hasUpdateAvailable(plugin))
+			{
+				toUpdate.add(plugin);
 			}
 		}
+		return toUpdate;
 	}
 	
-	private void notifyInstallerChangeError(PluginInstaller other, Exception exception) {
-		synchronized(this.listeners) {
-			final PluginManagerEvent event = new PluginManagerEvent(other, this.installer, exception);
-			
-			for (PluginManagerListener listener:this.listeners) {
-				listener.installerChangeError(event);
+	/**
+	 * @author Hugo Costa
+	 * 
+	 * @return
+	 * @throws IOException 
+	 * @throws NotInitializedException 
+	 */
+	public boolean updateAllPlugins()
+	{
+		Collection<PluginInfo> repository = getPluginDownloader().getPluginsInfo();
+		for(PluginInfo pluginInfo:repository)
+		{
+			Plugin plugin = getPlugin(pluginInfo.getUID());
+			if(plugin!= null && hasUpdateAvailable(plugin))
+			{
+				File file = new File(plugin.getPluginURL().getPath());
+				downloadPlugin(pluginInfo,file.getName());
 			}
 		}
+		return true;
 	}
 	
-	private void notifyDownloaderChanged(PluginDownloader old) {
-		synchronized(this.listeners) {
-			final PluginManagerEvent event = new PluginManagerEvent(old, this.downloader);
-			
-			for (PluginManagerListener listener:this.listeners) {
-				listener.downloaderChanged(event);
-			}
+	private void updateListeners(){
+		for (NeedsRestartListener n : listeners) {
+			n.needsToRestart();
 		}
 	}
-	
-	private void notifyDownloaderChangeError(PluginDownloader other, Exception exception) {
-		synchronized(this.listeners) {
-			final PluginManagerEvent event = new PluginManagerEvent(other, this.downloader, exception);
-			
-			for (PluginManagerListener listener:this.listeners) {
-				listener.downloaderChangeError(event);
-			}
+
+	/**
+	 * @param l
+	 */
+	public void addNeedToRestartListener(NeedsRestartListener l) {
+		listeners.add(l);	
+	}
+
+	/**
+	 * Hugo Costa
+	 * 
+	 * Delete all plugins to install 
+	 */
+	public void deleteAllPluginsToInstall() {
+		FileManager.removeSubDirectoriesAnDFiles(new File(getInstallDir()));
+	}
+
+	/* (non-Javadoc)
+	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadStarted(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
+	 */
+	@Override
+	public void downloadStarted(PluginDownloadEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadStep(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
+	 */
+	@Override
+	public void downloadStep(PluginDownloadEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadFinished(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
+	 */
+	@Override
+	public void downloadFinished(PluginDownloadEvent event) {
+		contUpdated++;
+		if(contUpdated == numToDownload){
+			updateListeners();
 		}
+		
 	}
-	
-	public boolean addPluginManagerListener(PluginManagerListener listener) {
-		return this.listeners.add(listener);
+
+	/* (non-Javadoc)
+	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadError(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
+	 */
+	@Override
+	public void downloadError(PluginDownloadEvent event) {
+
 	}
-	
-	public boolean removePluginManagerListener(PluginManagerListener listener) {
-		return this.listeners.remove(listener);
+
+	/**
+	 * @param actionListener
+	 */
+	public void removeNeedToRestartListener(NeedsRestartListener l) {
+		if(listeners!=null)
+			listeners.remove(l);
+		
 	}
-	
-	public List<PluginManagerListener> listeners() {
-		return new ArrayList<PluginManagerListener>(this.listeners);
+
+	@Override
+	public void downloadInfoStarted(PluginDownloadInfoEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void downloadInfoError(PluginDownloadInfoEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 //	public void installPlugin() {
 //		try {

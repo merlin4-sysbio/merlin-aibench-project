@@ -51,20 +51,20 @@ public class PluginActionProvider extends ComponentProvider<PluginActionComponen
 	private final static Hashtable<String, PluginActionComponent> UID_PAC = new Hashtable<String, PluginActionComponent>();
 	private final static PluginActionComponent emptyPAC = new PluginActionComponent();
 	
-	static {
-		PluginManager.getInstance().addPluginManagerListener(new PluginManagerListener() {
-			
-			public void installerChanged(PluginManagerEvent event) {}
-			
-			public void downloaderChanged(PluginManagerEvent event) {
-				PluginActionProvider.UID_PAC.clear();
-			}
-			
-			public void downloaderChangeError(PluginManagerEvent event) {}
-			
-			public void installerChangeError(PluginManagerEvent event) {}
-		});
-	}
+//	static {
+//		PluginManager.getInstance().addPluginManagerListener(new PluginManagerListener() {
+//			
+//			public void installerChanged(PluginManagerEvent event) {}
+//			
+//			public void downloaderChanged(PluginManagerEvent event) {
+//				PluginActionProvider.UID_PAC.clear();
+//			}
+//			
+//			public void downloaderChangeError(PluginManagerEvent event) {}
+//			
+//			public void installerChangeError(PluginManagerEvent event) {}
+//		});
+//	}
 //
 //	public final static void pluginDownloaderChanged() {
 //		PluginActionProvider.UID_PAC.clear();

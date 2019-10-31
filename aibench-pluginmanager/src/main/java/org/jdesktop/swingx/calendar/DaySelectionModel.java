@@ -48,8 +48,8 @@ import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.jdesktop.swingx.event.EventListenerMap;
 import org.jdesktop.swingx.event.DateSelectionEvent.EventType;
+import org.jdesktop.swingx.event.EventListenerMap;
 import org.jdesktop.swingx.util.Contract;
 
 /**

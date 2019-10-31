@@ -20,23 +20,77 @@
   <http://www.gnu.org/licenses/lgpl-3.0.html>.
   #L%
   -->
-<plugin start="false">
+<plugin start="true">
 	<uid>aibench.pluginmanager</uid>
 	<name>AIBench Plugin Manager</name>
 	<version>${version}</version>
+	<lifecycleclass>es.uvigo.ei.sing.aibench.pluginmanager.lifecycle.Lifecycle</lifecycleclass>
 	
 	<dependencies>
 		<dependency uid="aibench.core" />
-		<dependency uid="aibench.workbench" />
 	</dependencies>
 
-	<extensions>
+
+<extensions>
+	
+	<!-- Add New Plugisn -->
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.AddNewPlugins">
+			<operation-description 
+				name="Repository Manager" 
+				path="100000010@Help" 
+				uid="aibench.pluginmanager.loadplugins"
+			/>
+	    </extension>
+	    
+	    <extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<gui-operation  
+				operation="aibench.pluginmanager.loadplugins" 
+				class="es.uvigo.ei.sing.aibench.pluginmanager.gui2.PluginManagerGUI"
+				/>
+		</extension>
+		
+	<!-- Update All existent plugins -->
+	
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.UpdateAllPlugins">
+			<operation-description 
+				name="Updates" 
+				path="100000011@Help" 
+				uid="aibench.pluginmanager.updates"
+			/>
+	    </extension>
+	    
+	    <extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<gui-operation  
+				operation="aibench.pluginmanager.updates" 
+				class="es.uvigo.ei.sing.aibench.pluginmanager.gui2.UpdateAllPluginsGUI"
+				/>
+		</extension>
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.AutoUpdateAllPlugins">
+			<operation-description 
+				uid="aibench.pluginmanager.updatesextra"
+			/>
+	    </extension>
+	    
+	    <extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<gui-operation  
+				operation="aibench.pluginmanager.updatesextra" 
+				class="es.uvigo.ei.sing.aibench.pluginmanager.gui2.UpdateAllPluginsExtraGUI"
+				/>
+		</extension>
+		
+	<!-- Mini View -->
+		
+<!--
 		<extension uid="aibench.workbench" name="aibench.workbench.view">
 			<component slotid="bottom" 
 				componentid="aibench.pluginmanager.information" 
 				name="Plugin Information" 
 				class="es.uvigo.ei.sing.aibench.pluginmanager.gui.PluginInformationComponent"
 			/>
-		</extension>		
+		</extension>
+
+-->		
 	</extensions>
 </plugin>

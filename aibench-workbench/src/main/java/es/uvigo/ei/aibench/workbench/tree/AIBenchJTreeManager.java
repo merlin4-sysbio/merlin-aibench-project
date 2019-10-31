@@ -62,7 +62,6 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import es.uvigo.ei.aibench.Launcher;
 import es.uvigo.ei.aibench.Util;
 import es.uvigo.ei.aibench.core.Core;
 import es.uvigo.ei.aibench.core.ParamSource;
@@ -304,19 +303,26 @@ public class AIBenchJTreeManager implements HistoryListener, ClipboardListener, 
 						if (iconClipboard == null) {
 							c.setIcon(new ImageIcon(getClass().getResource("/images/clipboard.gif")));
 						} else {
-							URL imageUrl = Launcher.class.getProtectionDomain()
-									.getCodeSource().getLocation();
+//							URL imageUrl = Launcher.class.getProtectionDomain()
+//									.getCodeSource().getLocation() ;
+//							try {
+//								final String imageUrlString = imageUrl.toString();
+//								String baseUrl;
+//								
+//								if (imageUrl.getFile().endsWith(".jar")) {
+//									baseUrl = imageUrlString.substring(0, imageUrlString.lastIndexOf('/')) + "/";
+//								} else {
+//									baseUrl = imageUrlString;
+//								}
+//								
+//								c.setIcon(new ImageIcon(new URL(baseUrl + "../" + iconClipboard)));
+//							} catch (MalformedURLException e) {
+//								e.printStackTrace();
+//							}
+							
+							String imageUrlString = new File(System.getProperty("user.dir")).getPath();
 							try {
-								final String imageUrlString = imageUrl.toString();
-								String baseUrl;
-								
-								if (imageUrl.getFile().endsWith(".jar")) {
-									baseUrl = imageUrlString.substring(0, imageUrlString.lastIndexOf('/')) + "/";
-								} else {
-									baseUrl = imageUrlString;
-								}
-								
-								c.setIcon(new ImageIcon(new URL(baseUrl + "../" + iconClipboard)));
+								c.setIcon(new ImageIcon(new URL("file:".concat(imageUrlString) + "/" + iconClipboard)));
 							} catch (MalformedURLException e) {
 								e.printStackTrace();
 							}

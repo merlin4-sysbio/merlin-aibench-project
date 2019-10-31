@@ -130,11 +130,11 @@ public class SplashFrame extends JFrame implements IPluginEngineListener {
 						.getLocation();
 				try {
 					if (imageURL.getFile().endsWith(".jar")) {
-						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //original
-//						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //odias
+						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/../" + Launcher.CONFIG.getProperty("splashimage")); //original
+//						imageURL = new URL(imageURL.toString().substring(0, imageURL.toString().lastIndexOf('/')) + "/" + Launcher.CONFIG.getProperty("splashimage")); //odias
 					} else {
 //						imageURL = new URL(imageURL + "../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //original
-						imageURL = new URL(imageURL + "../../" + es.uvigo.ei.aibench.Launcher.CONFIG.getProperty("splashimage")); //odias
+						imageURL = new URL(imageURL + "../../" + Launcher.CONFIG.getProperty("splashimage")); //odias
 					}
 
 				} catch (MalformedURLException e1) {

@@ -22,13 +22,11 @@
 package es.uvigo.ei.aibench;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.platonos.pluginengine.Extension;
 import org.platonos.pluginengine.ExtensionPoint;
 import org.platonos.pluginengine.IPluginConfiguration;

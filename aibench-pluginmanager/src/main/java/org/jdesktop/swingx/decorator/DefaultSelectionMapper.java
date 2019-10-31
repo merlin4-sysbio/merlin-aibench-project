@@ -43,9 +43,10 @@ package org.jdesktop.swingx.decorator;
 
 
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Responsible for keeping track of selection in model coordinates.<p>

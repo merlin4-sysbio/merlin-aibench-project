@@ -42,17 +42,33 @@
 
 package org.jdesktop.swingx.util;
 
-import javax.swing.*;
-
-import org.jdesktop.swingx.SwingXUtilities;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
+
+import org.jdesktop.swingx.SwingXUtilities;
 
 /**
  * Encapsulates various utilities for windows (ie: <code>Frame</code> and
