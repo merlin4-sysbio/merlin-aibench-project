@@ -47,6 +47,19 @@
 	<build>
 		<plugins>
 			<plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-jar-plugin</artifactId>
+		      <configuration>
+		        <outputDirectory>${merlin.lib.directory}</outputDirectory>
+		        <archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>es.uvigo.ei.aibench.Launcher</mainClass>
+						</manifest>
+		      </archive>
+		      </configuration>
+		    </plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -57,7 +70,7 @@
 						</manifest>
 					</archive>
 				</configuration>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 </project>

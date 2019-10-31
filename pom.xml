@@ -74,6 +74,9 @@
 	</licenses>
 
 	<properties>
+		<!-- merlin -->
+		<merlin.plugins.directory>${project.basedir}/../../merlin-aibench/plugins_bin</merlin.plugins.directory>
+		<merlin.lib.directory>${project.basedir}/../../merlin-aibench/lib</merlin.lib.directory>
 		<!-- General -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
