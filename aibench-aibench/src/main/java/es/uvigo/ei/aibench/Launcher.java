@@ -22,11 +22,13 @@
 package es.uvigo.ei.aibench;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.platonos.pluginengine.Extension;
 import org.platonos.pluginengine.ExtensionPoint;
 import org.platonos.pluginengine.IPluginConfiguration;
@@ -117,6 +119,8 @@ public class Launcher {
 			try {
 				properties.load(Util.getGlobalResourceURL(Paths.getInstance().getPluginManagerConfigurationPath()).openStream());
 				String installerDir = properties.getProperty("plugininstaller.dir");
+				String baseString = properties.getProperty("base.application.dir");
+				
 				if (installerDir == null) {
 					System.err.println("Installer directory property ('plugininstaller.dir') isn't set at file 'conf/pluginmanager.conf'.");
 				} else {
@@ -124,9 +128,9 @@ public class Launcher {
 					Boolean deleteInvalidInstalls = Boolean.parseBoolean(properties.getProperty("plugininstaller.delete_invalid_installs", "true"));
 					String ignoreDirs = properties.getProperty("plugininstaller.ignore_dirs");
 					if (ignoreDirs != null && ignoreDirs.trim().length() > 0) {
-						installer = new PluginInstaller(Launcher.pluginsDir, installerDir, ignoreDirs.trim().split(";"));
+						installer = new PluginInstaller(Launcher.pluginsDir, installerDir,baseString, ignoreDirs.trim().split(";"));
 					} else {
-						installer = new PluginInstaller(Launcher.pluginsDir, installerDir);
+						installer = new PluginInstaller(Launcher.pluginsDir, installerDir, baseString);
 					}
 					
 					installer.installPlugins(deleteInvalidInstalls);
@@ -137,29 +141,28 @@ public class Launcher {
 		}
 	}
 
+
 	private static void configure() {
-//		URL url = Util.getGlobalResourceURL(Paths.getInstance().getLog4jConfigurationPath());
-//		PropertyConfigurator.configure(url);
+		URL url = Util.getGlobalResourceURL(Paths.getInstance().getLog4jConfigurationPath());
+		PropertyConfigurator.configure(url);
 	}
 
-	/**
-	 * Starts AIBench.
-	 *
-	 * This also shows a loading splash screen (see {@link SplashFrame}).
-	 * You can use the system property "aibench.nogui" to remove the splash
-	 * screen.
-	 *
-	 * @param args The directory of plugins. By default, it is "plugins_bin"
-	 */
 	public static void main(String[] args) {
 		readConfig();
-		Launcher.pluginsDir = (args.length >= 1) ? args[0] : "plugins_bin";
+		
+//	    Thread.setDefaultUncaughtExceptionHandler(AIBenchExceptionManager.getInstance());
 
+		Launcher.pluginsDir = (args.length >= 1) ? args[0] : ".";
+		
+		Util.registRestarInfo(Launcher.pluginsDir,Launcher.CONFIG.getProperty("restart.java.properties"));
+		Util.registRestartCommand(Launcher.CONFIG.getProperty("restart.command"));
+		
 		SplashFrame splash = null;
 		if (System.getProperty("aibench.nogui") == null) {
 			splash = new SplashFrame();
 			splash.setVisible(true);
 		}
+		
 		// Launcher.setLookAndFeel();
 		Launcher.configure();
 		Launcher.installUpdates();
@@ -168,21 +171,21 @@ public class Launcher {
 
 		if (System.getProperty("aibench.nogui") == null) {
 			engine.addPluginEngineListener(splash);
+		} else {
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				/**
+				 * Performs the plugin engine shutdown.
+				 */
+				@Override
+				public void run() {
+					Launcher.getPluginEngine().shutdown();
+				}
+			});
 		}
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-//				logger.info("Shutting down plugin engine");
-//				Launcher.getPluginEngine().shutdown();
-			}
-		});
-
 
 		engine.setStartPluginThreadCount(1);
 		engine.loadPlugins(Launcher.pluginsDir);
-		logger.info("Plugins loaded");
-		engine.start();
+		engine.start();				
 	}
 
 	private static void readConfig() {

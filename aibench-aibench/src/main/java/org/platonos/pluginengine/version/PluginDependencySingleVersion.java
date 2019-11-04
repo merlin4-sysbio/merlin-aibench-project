@@ -1,25 +1,4 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
-/*
 Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
 
 
@@ -54,18 +33,33 @@ package org.platonos.pluginengine.version;
  *
  */
 public final class PluginDependencySingleVersion extends PluginSingleVersion {
+	/**
+	 * 
+	 */
 	public PluginDependencySingleVersion() {
 		super();
 	}
 	
+	/**
+	 * @param releaseVersion
+	 */
 	public PluginDependencySingleVersion(int releaseVersion) {
 		super(releaseVersion);
 	}
 	
+	/**
+	 * @param releaseVersion
+	 * @param updateVersion
+	 */
 	public PluginDependencySingleVersion(int releaseVersion, int updateVersion) {
 		super(releaseVersion, updateVersion);
 	}
 
+	/**
+	 * @param releaseVersion
+	 * @param updateVersion
+	 * @param patchVersion
+	 */
 	public PluginDependencySingleVersion(int releaseVersion, int updateVersion,
 			int patchVersion) {
 		super(releaseVersion, updateVersion, patchVersion);
@@ -130,6 +124,9 @@ public final class PluginDependencySingleVersion extends PluginSingleVersion {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.platonos.pluginengine.PluginVersion#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof PluginDependencySingleVersion) {
@@ -142,6 +139,9 @@ public final class PluginDependencySingleVersion extends PluginSingleVersion {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.platonos.pluginengine.PluginVersion#toString()
+	 */
 	@Override
 	public String toString() {
 		String release = (this.getReleaseVersion() < 0)?"*":Integer.toString(this.getReleaseVersion());

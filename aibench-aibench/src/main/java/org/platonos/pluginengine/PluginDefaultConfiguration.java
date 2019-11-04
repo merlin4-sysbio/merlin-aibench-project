@@ -1,25 +1,4 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
-/*
 Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
 
 
@@ -84,22 +63,6 @@ public class PluginDefaultConfiguration implements IPluginConfiguration {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.platonos.pluginengine.IPluginConfiguration#isActivePlugin(org.platonos.pluginengine.Plugin)
-	 */
-	@Override
-	public boolean isActivePlugin(Plugin plugin) {
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.platonos.pluginengine.IPluginConfiguration#isActivePlugin(java.lang.String)
-	 */
-	@Override
-	public boolean isActivePlugin(String pluginUID) {
-		return true;
-	}
-	
-	/* (non-Javadoc)
 	 * @see org.platonos.pluginengine.IPluginConfiguration#setEnabledPlugin(org.platonos.pluginengine.Plugin, boolean)
 	 */
 	public void setEnabledPlugin(Plugin plugin, boolean value) {}
@@ -118,16 +81,4 @@ public class PluginDefaultConfiguration implements IPluginConfiguration {
 	 * @see org.platonos.pluginengine.IPluginConfiguration#setLoadPlugin(java.lang.String, boolean)
 	 */
 	public void setLoadPlugin(String pluginUID, boolean value) {}
-	
-	/* (non-Javadoc)
-	 * @see org.platonos.pluginengine.IPluginConfiguration#setActivePlugin(org.platonos.pluginengine.Plugin, boolean)
-	 */
-	@Override
-	public void setActivePlugin(Plugin plugin, boolean value) {}
-	
-	/* (non-Javadoc)
-	 * @see org.platonos.pluginengine.IPluginConfiguration#setActivePlugin(java.lang.String, boolean)
-	 */
-	@Override
-	public void setActivePlugin(String pluginUID, boolean value) {}
 }

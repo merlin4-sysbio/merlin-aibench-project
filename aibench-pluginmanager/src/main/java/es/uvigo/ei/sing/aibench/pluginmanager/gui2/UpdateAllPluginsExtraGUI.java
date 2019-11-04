@@ -56,10 +56,10 @@ import es.uvigo.ei.aibench.core.ParamSpec;
 import es.uvigo.ei.aibench.core.operation.OperationDefinition;
 import es.uvigo.ei.aibench.repository.NotInitializedException;
 import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
-import es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.workbench.InputGUI;
 import es.uvigo.ei.aibench.workbench.ParamsReceiver;
+import es.uvigo.ei.aibench.workbench.Workbench;
 import es.uvigo.ei.aibench.workbench.utilities.Utilities;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
 import es.uvigo.ei.sing.aibench.pluginmanager.gui.PluginActionProvider;
@@ -316,8 +316,7 @@ public class UpdateAllPluginsExtraGUI extends JDialog implements InputGUI, Plugi
 	 * 
 	 */
 	protected void restart() {
-//		Util.restart();
-		System.out.println("Should restart but i am not working");
+		Util.restart();
 	}
 
 
@@ -400,27 +399,6 @@ public class UpdateAllPluginsExtraGUI extends JDialog implements InputGUI, Plugi
 	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadError(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
 	 */
 	public void downloadError(PluginDownloadEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoStarted(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoError(PluginDownloadInfoEvent event) {
 		// TODO Auto-generated method stub
 		
 	}

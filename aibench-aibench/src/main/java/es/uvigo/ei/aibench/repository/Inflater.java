@@ -1,23 +1,30 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * Inflater.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 01/04/2009
  */
 package es.uvigo.ei.aibench.repository;
 
@@ -28,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -40,30 +49,33 @@ import com.ice.tar.TarInputStream;
  *
  */
 public class Inflater {
+	/**
+	 * 
+	 */
 	private static final int BUFFER_SIZE = 8192;
 
-	public static boolean inflate(File source, File output) {
-		boolean done = true;
+	public static Set<String> inflate(File source, File output) {
+		Set<String> createdFiles = new HashSet<String>();
 		if (Inflater.inflatableFile(source)) {
 			String sourceName = source.getName();
 			try {
 				if (sourceName.endsWith("jar")) {
 					Inflater.copyFile(source, output);
 				} else if (sourceName.endsWith("zip")) {
-					done = Inflater.inflateZip(source, output);
+					createdFiles = Inflater.inflateZip(source, output);
 				} else if (sourceName.endsWith("tar.gz")) {
-					done = Inflater.inflateTarGz(source, output);
+					createdFiles = Inflater.inflateTarGz(source, output);
 				} else if (sourceName.endsWith("tar")) {
-					done = Inflater.inflateTar(source, output);
+					createdFiles = Inflater.inflateTar(source, output);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				done = false;
+				createdFiles = null;
 			}
 		} else {
-			done = false;
+			createdFiles = null;
 		}
-		return done;
+		return createdFiles;
 	}
 	
 	public static boolean inflatableFile(File source) {
@@ -79,19 +91,30 @@ public class Inflater {
 
 	private static void copyFile(File source, File output)
 	throws IOException {
-		try (FileInputStream fis = new FileInputStream(source);
-			FileOutputStream fos = new FileOutputStream(output)
-		) {
-			final FileChannel sourceChannel = fis.getChannel();
-			final FileChannel outputChannel = fos.getChannel();
+		FileChannel sourceChannel = null, outputChannel = null;
+		try {
+			sourceChannel = new FileInputStream(source).getChannel();
+			outputChannel = new FileOutputStream(output).getChannel();
 			
 			sourceChannel.transferTo(0, sourceChannel.size(), outputChannel);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			try {
+				sourceChannel.close();
+			} catch (IOException e) {}
+			try {
+				outputChannel.close();
+			} catch (IOException e) {}
 		}
 	}
+	
 
-	private static boolean inflateZip(File source, File output)
+	private static Set<String> inflateZip(File source, File output)
 	throws IOException {
-		if (output.mkdir()) {
+		
+		Set<String> createdFiles = new HashSet<String>();
+		if (output.exists() || output.mkdir()) {
 			ZipInputStream zis = null;
 			BufferedOutputStream bos = null;
 			try {
@@ -105,6 +128,8 @@ public class Inflater {
 					if (entry.isDirectory()) {
 						file.mkdir();
 					} else {
+						file.getParentFile().mkdirs();
+						createdFiles.add(file.getAbsolutePath());
 						bos = new BufferedOutputStream(new FileOutputStream(file), Inflater.BUFFER_SIZE);
 						while ((len = zis.read(data)) != -1) {
 							bos.write(data, 0, len);
@@ -130,14 +155,16 @@ public class Inflater {
 				} catch (IOException ioe) {}
 			}
 
-			return true;
+			return createdFiles;
 		} else {
-			return false;
+			return null;
 		}
 	}
 
-	private static boolean inflateTarGz(File source, File output)
+	private static Set<String> inflateTarGz(File source, File output)
 	throws IOException {
+		
+		Set<String> createdFiles = new HashSet<String>();
 		if (output.mkdir()) {
 			BufferedOutputStream bos = null;
 			TarInputStream tis = null;
@@ -153,6 +180,7 @@ public class Inflater {
 					if (entry.isDirectory()) {
 						file.mkdir();
 					} else {
+						createdFiles.add(file.getAbsolutePath());
 						bos = new BufferedOutputStream(new FileOutputStream(file));
 						while ((len = tis.read(data)) != -1) {
 							bos.write(data, 0, len);
@@ -177,14 +205,15 @@ public class Inflater {
 				} catch (IOException ioe) {}
 			}
 
-			return true;
+			return createdFiles;
 		} else {
-			return false;
+			return null;
 		}
 	}
 
-	private static boolean inflateTar(File source, File output)
+	private static Set<String> inflateTar(File source, File output)
 	throws IOException {
+		Set<String> createdFiles = new HashSet<String>();
 		if (output.mkdir()) {
 			BufferedOutputStream bos = null;
 			TarInputStream tis = null;
@@ -200,6 +229,7 @@ public class Inflater {
 					if (entry.isDirectory()) {
 						file.mkdir();
 					} else {
+						createdFiles.add(file.getAbsolutePath());
 						bos = new BufferedOutputStream(new FileOutputStream(file));
 						while ((len = tis.read(data)) != -1) {
 							bos.write(data, 0, len);
@@ -224,9 +254,9 @@ public class Inflater {
 				} catch (IOException ioe) {}
 			}
 
-			return true;
+			return createdFiles;
 		} else {
-			return false;
+			return null;
 		}
 	}
 }

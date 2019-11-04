@@ -1,31 +1,36 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * Paths.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 14 Out, 2009
  */
 package es.uvigo.ei.aibench;
 
 import java.io.File;
 
 /**
- * A singleton class to access AIBench main paths.
- *
  * @author Miguel Reboiro Jato
  *
  */
@@ -37,12 +42,7 @@ public class Paths {
 			Paths.instance = new Paths();
 		}
 	}
-
-	/**
-	 * Gets the instance of the singleton
-	 *
-	 * @return The unique instance
-	 */
+	
 	public static Paths getInstance() {
 		if (Paths.instance == null) {
 			Paths.createInstance();
@@ -59,26 +59,44 @@ public class Paths {
 		Paths.DEFAULT_PATH + File.separator + "pluginmanager.conf";
 	private final static String DEFAULT_PLUGINS_CONFIGURATION_PATH = 
 		Paths.DEFAULT_PATH + File.separator + "plugins.conf";
+	private final static String PROXY_CONFIGURATION_PATH = 
+			Paths.DEFAULT_PATH + File.separator + "proxy.conf";
 	
 	private String aibenchConfigurationPath;
 	private String log4jConfigurationPath;
 	private String pluginManagerConfigurationPath;
 	private String pluginsConfigurationPath;
+	private String proxyConfigurationPath;
 	
 	private Paths() {}
-
-	/**
-	 * Gets the aibench basic runtime configuration file path
-	 *
-	 * @return The aibench basic runtime configuration file path
-	 */
+	
 	public String getAibenchConfigurationPath() {
 		if (this.aibenchConfigurationPath == null) {
 			this.createAibenchConfPath();
 		}
 		return this.aibenchConfigurationPath;
 	}
+	
+	public String getProxyConfigurationPath()
+	{
+		if(this.proxyConfigurationPath==null)
+		{
+			this.createProxyConfPath();
+		}
+		return this.proxyConfigurationPath;
+	}
 
+	/**
+	 * 
+	 */
+	private synchronized void createProxyConfPath() {
+		if (this.proxyConfigurationPath == null) {
+			this.proxyConfigurationPath = System.getProperty(
+				"aibench.paths.proxy.conf", 
+				Paths.PROXY_CONFIGURATION_PATH
+			);
+		}
+	}
 
 	private synchronized void createAibenchConfPath() {
 		if (this.aibenchConfigurationPath == null) {
@@ -90,8 +108,7 @@ public class Paths {
 	}
 
 	/**
-	 * Gets the Log4J configuration file path
-	 * @return The Log4J configuration file path
+	 * @return the log4jConfigurationPath
 	 */
 	public String getLog4jConfigurationPath() {
 		if (this.log4jConfigurationPath == null) {
@@ -100,6 +117,9 @@ public class Paths {
 		return this.log4jConfigurationPath;
 	}
 
+	/**
+	 * 
+	 */
 	private synchronized void createLog4jConfigurationPath() {
 		if (this.log4jConfigurationPath == null) {
 			this.log4jConfigurationPath = System.getProperty(
@@ -110,9 +130,7 @@ public class Paths {
 	}
 
 	/**
-	 * Gets the plugin manager configuration file path
-	 *
-	 * @return The plugin manager configuration file path
+	 * @return the pluginManagerConfigurationPath
 	 */
 	public String getPluginManagerConfigurationPath() {
 		if (this.pluginManagerConfigurationPath == null) {
@@ -121,6 +139,9 @@ public class Paths {
 		return this.pluginManagerConfigurationPath;
 	}
 
+	/**
+	 * 
+	 */
 	private synchronized void createPluginManagerConfigurationPath() {
 		if (this.pluginManagerConfigurationPath == null) {
 			this.pluginManagerConfigurationPath = System.getProperty(
@@ -131,8 +152,7 @@ public class Paths {
 	}
 
 	/**
-	 * Gets the plugins configuration file path
-	 * @return The plugins configuration file path
+	 * @return the pluginsConfigurationPath
 	 */
 	public String getPluginsConfigurationPath() {
 		if (this.pluginsConfigurationPath == null) {
@@ -141,6 +161,9 @@ public class Paths {
 		return this.pluginsConfigurationPath;
 	}
 
+	/**
+	 * 
+	 */
 	private synchronized void createPluginsConfigurationPath() {
 		if (this.pluginsConfigurationPath == null) {
 			this.pluginsConfigurationPath = System.getProperty(

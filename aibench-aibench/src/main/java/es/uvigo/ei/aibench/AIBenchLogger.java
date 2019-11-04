@@ -1,23 +1,30 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola and Ruben Dominguez Carbajales
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * AIBenchLogger.java
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on ${date}
  */
 package es.uvigo.ei.aibench;
 
@@ -27,10 +34,6 @@ import org.platonos.pluginengine.logging.ILogger;
 import org.platonos.pluginengine.logging.LoggerLevel;
 
 /**
- * A class implementing a logger for the Platonos plugin engine.
- *
- * This class shows less messages (only SEVERE and/or WARNING) than the default Platonos logger.
- *
  * @author Ruben Dominguez Carbajales 11-oct-2005 - 2005
  */
 public class AIBenchLogger implements ILogger {

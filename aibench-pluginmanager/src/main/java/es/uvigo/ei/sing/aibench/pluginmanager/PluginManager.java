@@ -51,7 +51,6 @@ import es.uvigo.ei.aibench.Launcher;
 import es.uvigo.ei.aibench.Paths;
 import es.uvigo.ei.aibench.repository.NotInitializedException;
 import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
-import es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.repository.PluginDownloader;
 import es.uvigo.ei.aibench.repository.PluginInstaller;
@@ -350,9 +349,9 @@ public final class PluginManager implements PluginDownloadListener{
 					    	timeout = 5;
 					    }
 					}
-//					this.downloader.setBackupHost(this.backupHost);
-//					this.downloader.setTimeout(timeout);
-					this.downloader.downloadInfo();
+					this.downloader.setBackupHost(this.backupHost);
+					this.downloader.setTimeout(timeout);
+					this.downloader.downloadInfo(true, true);
 				} catch (IOException ioe) {
 //					PluginManager.logger.error("Error creating PluginDownloader: " + ioe.getMessage(), ioe);
 					this.downloader = null;
@@ -698,9 +697,9 @@ public final class PluginManager implements PluginDownloadListener{
 			this.installerLock.writeLock().lock();
 			if (this.installDir != null && Launcher.pluginsDir != null) {
 				if (this.ignoreDirs == null) {
-					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir);
+					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir, this.baseProgramDir);
 				} else {
-					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir, this.ignoreDirs);
+					this.installer = new PluginInstaller(Launcher.pluginsDir, this.installDir, this.baseProgramDir,this.ignoreDirs);
 				}
 			}
 		} catch (IllegalArgumentException iae) {
@@ -887,7 +886,7 @@ public final class PluginManager implements PluginDownloadListener{
 	public List<Plugin> existUpdatesFromRepository(boolean hasTimeout) throws NotInitializedException, IOException
 	{
 		// Refresh Settings
-		PluginManager.getInstance().getPluginDownloader().downloadInfo();
+		PluginManager.getInstance().getPluginDownloader().downloadInfo(false, hasTimeout);
 		List<Plugin> toUpdate = new ArrayList<Plugin>();
 		Collection<PluginInfo> repository = getPluginDownloader().getPluginsInfo();
 		for(PluginInfo pluginInfo:repository)
@@ -989,24 +988,6 @@ public final class PluginManager implements PluginDownloadListener{
 	public void removeNeedToRestartListener(NeedsRestartListener l) {
 		if(listeners!=null)
 			listeners.remove(l);
-		
-	}
-
-	@Override
-	public void downloadInfoStarted(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void downloadInfoError(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
 		
 	}
 

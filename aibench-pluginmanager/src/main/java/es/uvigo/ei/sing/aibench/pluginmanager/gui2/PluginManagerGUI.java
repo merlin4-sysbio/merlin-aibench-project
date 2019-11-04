@@ -219,9 +219,9 @@ public class PluginManagerGUI extends JDialog implements InputGUI, NeedsRestartL
 		instaledPlugins.add(info);
 
 		// info.hideIDPluginsColumn();
-//		info.setHideColumn(3);
-//		info.setHideColumn(3);
-//		info.setHideColumn(4);
+		info.setHideColumn(3);
+		info.setHideColumn(3);
+		info.setHideColumn(4);
 
 		repositoryPlugins = new JPanel();
 		repositoryPlugins.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Repository Plugins", TitledBorder.LEADING,
@@ -271,7 +271,7 @@ public class PluginManagerGUI extends JDialog implements InputGUI, NeedsRestartL
 			}
 		}
 
-//		info.addNeedToRestartListener(this);
+		info.addNeedToRestartListener(this);
 	}
 
 	private void clean() {
@@ -279,9 +279,9 @@ public class PluginManagerGUI extends JDialog implements InputGUI, NeedsRestartL
 			PluginManager.getInstance().getPluginDownloader().cancelDownloads();
 		PluginManager.getInstance().deleteAllPluginsToInstall();
 		PluginManager.getInstance().removeNeedToRestartListener(this);
-//		if (info != null)
-//			info.removeNeedToRestartListener(this);
-//		PluginActionProvider.pluginDownloaderChanged();
+		if (info != null)
+			info.removeNeedToRestartListener(this);
+		PluginActionProvider.pluginDownloaderChanged();
 	}
 
 	public void addNewPluginsPane() {
@@ -289,7 +289,7 @@ public class PluginManagerGUI extends JDialog implements InputGUI, NeedsRestartL
 			repositoryPlugins = new JPanel();
 		repositoryPlugins.removeAll();
 		try {
-			PluginManager.getInstance().getPluginDownloader().downloadInfo();
+			PluginManager.getInstance().getPluginDownloader().downloadInfo(true, false);
 		} catch (NotInitializedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -308,8 +308,7 @@ public class PluginManagerGUI extends JDialog implements InputGUI, NeedsRestartL
 		btnRestart.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-//				Util.restart();
-				System.out.println("should restart when pressed!");
+				Util.restart();
 			}
 		});
 	}

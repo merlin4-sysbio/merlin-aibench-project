@@ -1,24 +1,13 @@
-/*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.platonos.pluginengine;
 
 import java.io.File;
@@ -79,7 +68,6 @@ public final class PluginEngine {
 	private final Map<String, List<Plugin>> plugins = new HashMap<String, List<Plugin>>(50);
 	
 	/**
-	 * Stored Plugins that are not already loaded.
 	 * 
 	 * @author Miguel Reboiro Jato
 	 */
@@ -140,7 +128,8 @@ public final class PluginEngine {
 	/**
 	 * Creates a new PluginEngine instance using the DefaultLogger.
 	 * 
-	 * @param uid a String that uniquely identifies this PluginEngine instance.
+	 * @param uid
+	 *          A String that uniquely identifies this PluginEngine instance.
 	 */
 	public PluginEngine(String uid) {
 		this(uid, (IPluginConfiguration) null, new DefaultLogger());
@@ -149,9 +138,9 @@ public final class PluginEngine {
 	/**
 	 * Creates a new PluginEngine instance which uses the specified logger.
 	 * 
-	 * @param uid a String that uniquely identifies this PluginEngine instance.
-	 * @param logger the logger to be used.
 	 * @see ILogger
+	 * @param uid
+	 *          A String that uniquely identifies this PluginEngine instance.
 	 */
 	public PluginEngine(String uid, ILogger logger) {
 		this(uid, (IPluginConfiguration) null, logger);
@@ -250,16 +239,6 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * 
-	 * @author Miguel Reboiro Jato
-	 * @param plugin
-	 * @return
-	 */
-	private boolean isActivePlugin(Plugin plugin) {
-		return this.configuration == null || this.configuration.isActivePlugin(plugin);
-	}
-
-	/**
 	 * Starts the PluginEngine. No Plugins are started until the PluginEngine is started. Plugins loaded before the PluginEngine
 	 * starts that should be started when resolved (see {@link Plugin#setStartWhenResolved(boolean)}) will not be started until the
 	 * PluginEngine is started.
@@ -277,8 +256,7 @@ public final class PluginEngine {
 		}
 
 		engineStarted = true;
-		firePluginEngineEvent(new PluginEngineEvent(PluginEngineEventType.STARTUP,
-				this));
+		firePluginEngineEvent(new PluginEngineEvent(PluginEngineEventType.STARTUP,this));				
 	}
 	
 	/**
@@ -308,9 +286,11 @@ public final class PluginEngine {
 	/**
 	 * Loads the Plugin at the specified location. Allows an application or Plugin to dynamically load a Plugin at runtime.
 	 * 
-	 * @param location the location to look for the Plugin to load. Can point to a Plugin archive or a directory containing
-	 * an unzipped Plugin archive.
-	 * @throws PluginEngineException if the Plugin could not be loaded.
+	 * @param location
+	 *          The location to look for the Plugin to load. Can point to a Plugin archive or a directory containing an unzipped
+	 *          Plugin archive.
+	 * @throws PluginEngineException
+	 *           if the Plugin could not be loaded.
 	 */
 	public void loadPlugin(File location) throws PluginEngineException {
 		if (location == null) {
@@ -349,11 +329,8 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Equivalent to {@code loadPlugin(new File(location));}.
+	 * Equivolent to <code>loadPlugin(new File(location));</code>.
 	 * 
-	 * @param location  the location to look for the Plugin to load. Can point to a Plugin archive or a directory
-	 * containing an unzipped Plugin archive.
-	 * @throws PluginEngineException if the Plugin could not be loaded. 
 	 * @see #loadPlugin(File)
 	 */
 	public void loadPlugin(String location) throws PluginEngineException {
@@ -367,8 +344,9 @@ public final class PluginEngine {
 	 * Loads the Plugins at the specified location. Allows an application or Plugin to dynamically load Plugins at runtime. Failure
 	 * to load one or more Plugins will be logged as SEVERE.
 	 * 
-	 * @param directory the directory to look for plugins to load. Can point a directory containing Plugin archives or a directory
-	 * with subdirectories each containing an unzipped Plugin archive.
+	 * @param directory
+	 *          The directory to look for plugins to load. Can point a directory containing Plugin archives or a directory with
+	 *          subdirectories each containing an unzipped Plugin archive.
 	 */
 	public void loadPlugins(File directory) {
 		if (directory == null) {
@@ -428,10 +406,8 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Equivolent to {@code loadPlugins(new File(directory));}.
+	 * Equivalent to <code>loadPlugins(new File(directory));</code>.
 	 * 
-	 * @param directory the directory to look for plugins to load. Can point a directory containing Plugin archives or a directory
-	 * with subdirectories each containing an unzipped Plugin archive.
 	 * @see #loadPlugins(File)
 	 */
 	public void loadPlugins(String directory) {
@@ -443,14 +419,11 @@ public final class PluginEngine {
 
 	/**
 	 * Marshals the specified plugin.xml into a Plugin instance and adds it to this PluginEngine.
-	 * 
-	 * @param pluginXML the location of the plugin.xml file.
-	 * @throws PluginEngineException if an error occurs while loading the plugin.xml file.
 	 */
 	private void loadPluginXML(File pluginXML) throws PluginEngineException {
 		URL pluginXmlURL;
 		try {
-			pluginXmlURL = pluginXML.toURI().toURL();
+			pluginXmlURL = pluginXML.toURL();
 		}
 		catch (MalformedURLException ex) {
 			throw new PluginEngineException("Error getting URL for plugin.xml file: "
@@ -461,9 +434,6 @@ public final class PluginEngine {
 
 	/**
 	 * Marshals the specified plugin.xml into a Plugin instance and adds it to this PluginEngine.
-	 * 
-	 * @param pluginXML the location of the plugin.xml file.
-	 * @throws PluginEngineException if an error occurs while loading the plugin.xml file.
 	 */
 	private void loadPluginXML(URL pluginXmlURL) throws PluginEngineException {
 		// Marshal the plugin.xml file into a Plugin instance.
@@ -490,11 +460,11 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Loads the specifed Plugin into this PluginEngine. Normally Plugins are loaded by {@link #loadPlugin(File)} or
-	 * {@link #loadPlugins(File)}, but this method allows Plugins to be constructed and added to the PluginEngine manually.
-	 *
-	 * @param plugin the Plugin to be loaded.
-	 * @throws PluginEngineException if the Plugin could not be added.
+	 * Loads the specifed Plugin into this PluginEngine. Normally Plugins are loaded by {@link #loadPlugin(File)}or
+	 * {@link #loadPlugins(File)}but this method allows Plugins to be constructed and added to the PluginEngine manually.
+	 * 
+	 * @throws PluginEngineException
+	 *           if the Plugin could not be added.
 	 */
 	public void loadPlugin(Plugin plugin) throws PluginEngineException {
 		if (plugin == null) {
@@ -544,8 +514,6 @@ public final class PluginEngine {
 			PluginEngineEvent event = new PluginEngineEvent(PluginEngineEventType.PLUGIN_LOADED, this);
 			event.setPayload(plugin);
 			firePluginEngineEvent(event);
-			
-			plugin.isActive = this.isActivePlugin(plugin);
 	
 			//TODO: MIGUEL Check
 			if (this.isEnabledPlugin(plugin)) {
@@ -566,7 +534,6 @@ public final class PluginEngine {
 			}
 		} else {
 			plugin.isLoaded = false;
-			plugin.isActive = false;
 			plugin.isDisabled = !this.isEnabledPlugin(plugin);
 			
 			this.unloadedPlugins.add(plugin);
@@ -646,11 +613,11 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns {@code true} if the specified Plugin and all its required Dependencies can be resolved.
+	 * Returns true if the specified Plugin and all its required Dependencies can be resolved.
 	 * 
-	 * @param plugin the plugin to be checked.
-	 * @param ignorePlugins Plugins in this Set will be ignored in figuring if the specified Plugin can resolve.
-	 * These Plugins are those that are only resolvable if the specified Plugin is resolvable.
+	 * @param ignorePlugins
+	 *          Plugins in this Set will be ignored in figuring if the specified Plugin can resolve. These Plugins are those that
+	 *          are only resolvable if the specified Plugin is resolvable.
 	 */
 	private boolean isResolvable(Plugin plugin, Set<Plugin> ignorePlugins) {
 		ignorePlugins.add(plugin);
@@ -685,8 +652,6 @@ public final class PluginEngine {
 
 	/**
 	 * Tries to resolve all unresolved Extensions for the specified Plugin.
-	 * 
-	 * @param plugin the Plugin whose Extensions will be resolved.
 	 */
 	private void resolveExtensions(Plugin plugin) {
 		for (Extension extension:plugin.getExtensions()) {
@@ -715,9 +680,6 @@ public final class PluginEngine {
 	/**
 	 * Unresolves the specified Plugin. This will cause other Plugins that have a required Dependency on this Plugin to also be
 	 * unresolved.
-	 * 
-	 * @param plugin the Plugin to be unresolved.
-	 * @param resolveAgain whether the Plugin should be resolved again.
 	 */
 	synchronized void unresolvePlugin(Plugin plugin, boolean resolveAgain) {
 		unresolvePlugin(plugin, new HashSet<Plugin>());
@@ -732,9 +694,8 @@ public final class PluginEngine {
 	/**
 	 * Unresolves the specified Plugin.
 	 * 
-	 * @param plugin the Plugin to be unresolved.
-	 * @param unresolvingPlugins contains the Plugins that are already being unresolved and no attempt should be made to unresolve
-	 * them again.
+	 * @param unresolvingPlugins
+	 *          Contains the Plugins that are already being unresolved and no attempt should be made to unresolve them again.
 	 */
 	synchronized void unresolvePlugin(Plugin plugin, Set<Plugin> unresolvingPlugins) {
 		if (!plugin.isResolved()) {
@@ -814,8 +775,6 @@ public final class PluginEngine {
 
 	/**
 	 * Unresolves the specified Plugin and prohibits it from becoming resolved again.
-	 * 
-	 * @param plugin the Plugin to be disabled.
 	 */
 	synchronized public void disablePlugin(Plugin plugin) {
 		if (plugin.isDisabled()) {
@@ -836,8 +795,6 @@ public final class PluginEngine {
 
 	/**
 	 * Allows the specified previously disabled Plugin to become resolved again.
-	 * 
-	 * @param plugin the Plugin to be enabled.
 	 */
 	synchronized public void enablePlugin(Plugin plugin) {
 		if (!plugin.isDisabled())
@@ -859,8 +816,6 @@ public final class PluginEngine {
 	/**
 	 * Unloads the specified Plugin. This will cause other Plugins that have a required Dependency on the specified Plugin to become
 	 * unresolved.
-	 * 
-	 * @param plugin the Plugin to be unloaded.
 	 */
 	public synchronized void unloadPlugin(Plugin plugin) {
 		if (plugin == null) {
@@ -902,10 +857,9 @@ public final class PluginEngine {
 	}
 	
 	/**
-	 * Return a Plugin that is not loaded.
-	 * 
-	 * @param pluginUID the UID of the Plugin.
-	 * @return a Plugin that it is not loaded or {@code null} if the Plugin is not unloaded.
+	 * Return a plugin that is not loaded.
+	 * @param pluginUID
+	 * @return
 	 * @author Miguel Reboiro Jato
 	 */
 	public Plugin getUnloadedPlugin(String pluginUID) {
@@ -925,10 +879,7 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns the Plugin with the highest version that has the specified UID or @{code null} if it could not be found.
-	 * 
-	 * @param pluginUID the UID of the Plugin.
-	 * @return a Plugin with the provided UIR or {@code null} if the Plugin was not found.
+	 * Returns the Plugin with the highest version that has the specified UID or null if it could not be found.
 	 */
 	public Plugin getPlugin(String pluginUID) {
 		if (pluginUID == null) {
@@ -945,11 +896,7 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns the Plugin with the highest version that matches the specified version and UID or @{code null} if it could not be found.
-	 * 
-	 * @param pluginUID the UID of the Plugin.
-	 * @param requiredVersion the required version of the Plugin.
-	 * @return a Plugin with the provided UIR or {@code null} if a valid Plugin was not found.
+	 * Returns the Plugin with the highest version that matches the specified version and UID or null if it could not be found.
 	 */
 	public Plugin getPlugin(String pluginUID, PluginVersion requiredVersion) {
 		if (requiredVersion == null) {
@@ -1000,10 +947,7 @@ public final class PluginEngine {
 //	}
 
 	/**
-	 * Returns the Plugin with the highest version that matches the specified Dependency or {@code null} if it could not be found.
-	 * 
-	 * @param dependency the Dependency that should be matched.
-	 * @return the Plugin with the highest version that matches the specified Dependency or {@code null} if it could not be found.
+	 * Returns the Plugin with the highest version that matches the specified Dependency or null if it could not be found.
 	 */
 	public Plugin getPlugin(Dependency dependency) {
 		if (dependency == null) {
@@ -1020,10 +964,7 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns the Plugin for the specified URL or {@code null} if it could not be found.
-	 * 
-	 * @param url the URL of the plugin.
-	 * @return the Plugin for the specified URL or {@code null} if it could not be found.
+	 * Returns the Plugin for the specified URL or null if it could not be found.
 	 */
 	public Plugin getPlugin(URL url) {
 		if (url == null) {
@@ -1040,9 +981,7 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns a list of all loaded Plugins. These Plugins are not necessarily loaded, resolved, started, or enabled.
-	 * 
-	 * @return a list of all loaded Plugins. These Plugins are not necessarily loaded, resolved, started, or enabled.
+	 * Returns a List of all loaded Plugins. These Plugins are not necessarily loaded, resolved, started, or enabled.
 	 */
 	public List<Plugin> getPlugins() {
 		// This is inefficient because of how the plugins are stored. Fortunately this method is rarely used.
@@ -1056,8 +995,6 @@ public final class PluginEngine {
 	
 	/**
 	 * Returns the list of unresolved Plugins.
-	 * 
-	 * @return the list of unresolved Plugins.
 	 * @author Miguel Reboiro Jato
 	 */
 	public List<Plugin> getUnresolvedPlugins() {
@@ -1066,8 +1003,6 @@ public final class PluginEngine {
 	
 	/**
 	 * Returns the list of resolved Plugins.
-	 * 
-	 * @return the list of resolved Plugins.
 	 * @author Miguel Reboiro Jato
 	 */
 	public List<Plugin> getResolvedPlugins() {
@@ -1078,8 +1013,6 @@ public final class PluginEngine {
 	
 	/**
 	 * Return the list of unloaded Plugins.
-	 * 
-	 * @return the list of unloaded Plugins.
 	 * @author Miguel Reboiro Jato
 	 */
 	public List<Plugin> getUnloadedPlugins() {
@@ -1088,8 +1021,6 @@ public final class PluginEngine {
 	
 	/**
 	 * Return the list of loaded Plugins.
-	 * 
-	 * @return the list of loaded Plugins.
 	 * @author Miguel Reboiro Jato
 	 */
 	public List<Plugin> getLoadedPlugins() {
@@ -1100,10 +1031,9 @@ public final class PluginEngine {
 	
 	/**
 	 * Determines if a plugin is loaded in this Plugin Engine.
-	 * 
 	 * @author Miguel Reboiro Jato
 	 * @param plugin the plugin.
-	 * @return {@code true} if the plugin is loaded, {@code false} otherwise.
+	 * @return <code>true</code> if the plugin is loaded, <code>false</code> otherwise.
 	 */
 	public boolean isLoaded(Plugin plugin) {
 		if (plugin == null) return false;
@@ -1114,7 +1044,7 @@ public final class PluginEngine {
 	 * Determines if a plugin is enabled in this Plugin Engine.
 	 * @author Miguel Reboiro Jato
 	 * @param plugin the plugin.
-	 * @return {@code true} if the plugin is loaded, {@code false} otherwise.
+	 * @return <code>true</code> if the plugin is loaded, <code>false</code> otherwise.
 	 */
 	public boolean isEnabled(Plugin plugin) {
 		if (plugin == null) return false;
@@ -1124,8 +1054,8 @@ public final class PluginEngine {
 	/**
 	 * Determines if a plugin is loaded in this Plugin Engine.
 	 * @author Miguel Reboiro Jato
-	 * @param pluginUID the plugin UID.
-	 * @return {@code true} if the plugin is loaded, {@code false} otherwise.
+	 * @param plugin the plugin UID.
+	 * @return <code>true</code> if the plugin is loaded, <code>false</code> otherwise.
 	 */
 	public boolean isLoaded(String pluginUID) {
 		Plugin plugin = this.getPlugin(pluginUID);
@@ -1136,8 +1066,8 @@ public final class PluginEngine {
 	/**
 	 * Determines if a plugin is enabled in this Plugin Engine.
 	 * @author Miguel Reboiro Jato
-	 * @param pluginUID the plugin UID.
-	 * @return {@code true} if the plugin is loaded, {@code false} otherwise.
+	 * @param plugin the plugin UID.
+	 * @return <code>true</code> if the plugin is loaded, <code>false</code> otherwise.
 	 */
 	public boolean isEnabled(String pluginUID) {
 		Plugin plugin = this.getPlugin(pluginUID);
@@ -1149,8 +1079,6 @@ public final class PluginEngine {
 	 * Adds a supported Plugin archive extension to this PluginEngine. Only files with these extensions will be found as Plugins by
 	 * {@link #loadPlugin(File)}and {@link #loadPlugins(File)}. If the list is empty when the engine is started, the defaults of
 	 * ".jar" and ".par" will be used.
-	 * 
-	 * @param archiveExtension the new archive extension to be supported.
 	 */
 	public void addArchiveExtension(String archiveExtension) {
 		if (archiveExtension == null) {
@@ -1165,18 +1093,16 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns a list of Strings representing the Plugin archive filename extensions that are supported by this PluginEngine.
-	 * 
-	 * @return a list of Strings representing the Plugin archive filename extensions that are supported by this PluginEngine.
+	 * Returns a List of Strings representing the Plugin archive filename extensions that are supported by this PluginEngine.
 	 */
 	public List<String> getArchiveExtensions() {
 		// Add default ".jar" and ".par" file extension if the list is empty.
 		if (archiveExtensions.isEmpty()) {
-			getLogger().log(
-				LoggerLevel.FINE,
-				"No archive extensions specified. Using the defaults \".jar\" and \".par\".",
-				null
-			);
+			getLogger()
+					.log(
+							LoggerLevel.FINE,
+							"No archive extensions specified. Using the defaults \".jar\" and \".par\".",
+							null);
 			addArchiveExtension(".jar");
 			addArchiveExtension(".par");
 		}
@@ -1185,10 +1111,8 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns the value for the specified key or {@code null} if the key has no value.
+	 * Returns the value for the specified key or null if the key has no value.
 	 * 
-	 * @param key the key of a token.
-	 * @return the value for the specified key or {@code null} if the key has no value.
 	 * @see #addToken(String, String)
 	 */
 	public String getToken(String key) {
@@ -1203,8 +1127,6 @@ public final class PluginEngine {
 	 * Adds a token that can be used by any Plugin. For Plugins to use these tokens as replacements in their plugin.xml, the tokens
 	 * must be set before the Plugins are loaded (usually before the PluginEngine is started).
 	 * 
-	 * @param key the key of the token.
-	 * @param token the token.
 	 * @see Plugin#replaceToken(String)
 	 */
 	public void addToken(String key, String token) {
@@ -1217,8 +1139,6 @@ public final class PluginEngine {
 
 	/**
 	 * Returns the logger for this PluginEngine. Any Plugin can make use of this for PluginEngine related logging purposes.
-	 * 
-	 * @return the logger for this PluginEngine. Any Plugin can make use of this for PluginEngine related logging purposes.
 	 */
 	public ILogger getLogger() {
 		return logger;
@@ -1226,8 +1146,6 @@ public final class PluginEngine {
 
 	/**
 	 * Returns the unique ID for this PluginEngine or an empty String if this PluginEngine was created without one.
-	 * 
-	 * @return the unique ID for this PluginEngine or an empty String if this PluginEngine was created without one.
 	 */
 	public String getUID() {
 		return uid;
@@ -1235,8 +1153,6 @@ public final class PluginEngine {
 
 	/**
 	 * Adds a listener to receive PluginEngineEvents.
-	 * 
-	 * @param listener a listener that will receive PluginEngineEvents.
 	 */
 	public void addPluginEngineListener(IPluginEngineListener listener) {
 		if (listener == null) {
@@ -1248,8 +1164,6 @@ public final class PluginEngine {
 
 	/**
 	 * Removes a listener from receiving PluginEngineEvents.
-	 * 
-	 * @param listener the listener to remove from receiving PluginEngineEvents.
 	 */
 	public void removePluginEngineListener(IPluginEngineListener listener) {
 		if (listener == null) {
@@ -1261,8 +1175,6 @@ public final class PluginEngine {
 
 	/**
 	 * Fires a PluginEngineEvent.
-	 * 
-	 * @param event the event to fire.
 	 */
 	void firePluginEngineEvent(PluginEngineEvent event) {
 		for (IPluginEngineListener listener:pluginEngineListeners) {
@@ -1275,7 +1187,6 @@ public final class PluginEngine {
 	 * "/user's temp dir/platonos/engine uid/". Classes and other resources are extracted from Plugin archives directly into memory,
 	 * they are not written to disk except for in special cases, such as for native libraries.
 	 * 
-	 * @param tempDirectory the temporary directory.
 	 * @see Plugin#getExtractedResourcePath(String)
 	 */
 	public void setTempDirectory(String tempDirectory) {
@@ -1287,9 +1198,8 @@ public final class PluginEngine {
 	}
 
 	/**
-	 * Returns the temporary directory that this PluginEngine will use for scratch and extracted Plugin resources.
+	 * Gets the temporary directory that this PluginEngine will use for scratch and extracted Plugin resources.
 	 * 
-	 * @return the temporary directory that this PluginEngine will use for scratch and extracted Plugin resources.
 	 * @see #setTempDirectory(String)
 	 */
 	public String getTempDirectory() {
@@ -1297,10 +1207,9 @@ public final class PluginEngine {
 	}
 	
 	/**
-	 * Returns the plugin configuration.
 	 * 
-	 * @return the plugin configuration.
 	 * @author Miguel Reboiro Jato
+	 * @return
 	 */
 	public IPluginConfiguration getPluginConfiguration() {
 		return this.configuration;
@@ -1311,7 +1220,6 @@ public final class PluginEngine {
 	 * the {@link PluginLifecycle#start()}method will never be invoked for any plugins. This must be set before the PluginEngine
 	 * starts.
 	 * 
-	 * @param startPluginThreadCount the initial value of the start plugin thread count.
 	 * @see PluginLifecycle#start()
 	 */
 	public void setStartPluginThreadCount(int startPluginThreadCount) {
@@ -1327,18 +1235,13 @@ public final class PluginEngine {
 	 * Enables or disables validation of plugin.xml files. Validation is enabled by default, but requires the JAXP 1.2+ libraries to
 	 * be in the classpath for Java 1.4. Java 1.5 includes the necessary JAXP libraries. This must be set before the PluginEngine
 	 * starts.
-	 * 
-	 * @param isValidationEnabled whether the plugin validation is enabled or not.
 	 */
 	public void setPluginValidationEnabled(boolean isValidationEnabled) {
 		PluginXmlParser.isValidationEnabled = isValidationEnabled;
 	}
 
 	/**
-	 * Returns the Plugin that the specified ClassLoader belongs to or {@code null} if the ClassLoader does not belong to a Plugin.
-	 * 
-	 * @param classLoader the class loader used to load the plugin.
-	 * @return the Plugin that the specified ClassLoader belongs to or {@code null} if the ClassLoader does not belong to a Plugin.
+	 * Returns the Plugin that the specified ClassLoader belongs to or null if the ClassLoader does not belong to a Plugin.
 	 */
 	static public Plugin getPlugin(ClassLoader classLoader) {
 		if (classLoader == null) {
@@ -1356,10 +1259,6 @@ public final class PluginEngine {
 	/**
 	 * Returns the Plugin that the specified class was loaded from or null if the class was not loaded from a Plugin. This is
 	 * useful, for example, when an extension instance needs to reference its Plugin without using a lifecycle class.
-	 * 
-	 * @param clazz the class whose class loader will be used to load the plugin.
-	 * @return the plugin that the class loader of the provided class belogs to or {@code null} if the ClassLoader does not belong
-	 * to a Plugin.
 	 */
 	static public Plugin getPlugin(Class<?> clazz) {
 		if (clazz == null) {

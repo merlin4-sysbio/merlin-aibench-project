@@ -243,10 +243,9 @@ public class AddPluginPane extends JPanel{
 			Object node = path.getLastPathComponent();
 			if (node instanceof PluginTreeTableNode) {
 				PluginInfo plugin = ((PluginTreeTableNode) node).getUserObject();
-//				if(plugin.getDescription()!=null)
-				if(plugin != null)
+				if(plugin.getDescription()!=null)
 				{
-					JOptionPane.showMessageDialog(null,"bla bla bla","Plug-in info",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null,plugin.getDescription(),"Plug-in info",JOptionPane.INFORMATION_MESSAGE);
 				}
 				else
 				{

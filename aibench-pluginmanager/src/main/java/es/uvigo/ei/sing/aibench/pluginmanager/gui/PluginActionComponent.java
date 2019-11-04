@@ -1,23 +1,30 @@
 /*
- * #%L
- * The AIBench Plugin Manager Plugin
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * PluginManagerProvider.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 11/04/2009
  */
 package es.uvigo.ei.sing.aibench.pluginmanager.gui;
 
@@ -47,7 +54,6 @@ import org.platonos.pluginengine.PluginEngineException;
 
 import es.uvigo.ei.aibench.repository.NotInitializedException;
 import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
-import es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.repository.info.PluginInfo;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
@@ -57,12 +63,15 @@ import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
  *
  */
 public class PluginActionComponent extends JPanel implements RolloverRenderer, PluginDownloadListener {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
 	public static enum State { EMPTY, DOWNLOADABLE, DOWNLOADING, FINISHED, ERROR };
 	
 	private State state;
-	private Throwable error;
+	private Exception error;
 	
 	private final PluginInfo pluginInfo;
 	private final String update;
@@ -117,7 +126,9 @@ public class PluginActionComponent extends JPanel implements RolloverRenderer, P
 		return this.state;
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see org.jdesktop.swingx.rollover.RolloverRenderer#doClick()
+	 */
 	public void doClick() {
 		switch(this.state) {
 		case DOWNLOADABLE:
@@ -130,10 +141,13 @@ public class PluginActionComponent extends JPanel implements RolloverRenderer, P
 			this.linkError.doClick();
 			break;
 		default:
+			break;
 		}
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see org.jdesktop.swingx.rollover.RolloverRenderer#isEnabled()
+	 */
 	public boolean isEnabled() {
 		return this.state != State.EMPTY;
 	}
@@ -232,7 +246,10 @@ public class PluginActionComponent extends JPanel implements RolloverRenderer, P
 						PluginActionComponent.this.lblMessage.setText("Reboot to Install");
 						PluginActionComponent.this.removeAll();
 						PluginActionComponent.this.add(PluginActionComponent.this.lblMessage, BorderLayout.CENTER);
-						PluginActionComponent.this.repaintContainers();						
+						PluginActionComponent.this.repaintContainers();	
+						/**
+						 * Add Listener
+						 */
 					} else {
 						PluginActionComponent.this.state = State.DOWNLOADABLE;
 						PluginActionComponent.this.panelDownload.reset();
@@ -404,23 +421,5 @@ public class PluginActionComponent extends JPanel implements RolloverRenderer, P
 		public void doClick() {
 			this.btnCancel.doClick();
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadInfoError(es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent)
-	 */
-	public void downloadInfoError(PluginDownloadInfoEvent event) {
-	}
-
-	/* (non-Javadoc)
-	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadInfoFinished(es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent)
-	 */
-	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
-	}
-
-	/* (non-Javadoc)
-	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadInfoStarted(es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent)
-	 */
-	public void downloadInfoStarted(PluginDownloadInfoEvent event) {
 	}
 }

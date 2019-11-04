@@ -1,23 +1,30 @@
 /*
- * #%L
- * The AIBench Plugin Manager Plugin
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * PluginInformationComponent.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 21/03/2009
  */
 package es.uvigo.ei.sing.aibench.pluginmanager.gui;
 
@@ -25,11 +32,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JScrollPane;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -47,6 +58,7 @@ import org.platonos.pluginengine.PluginEngineException;
 
 import es.uvigo.ei.aibench.repository.info.PluginInfo;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
+import es.uvigo.ei.sing.aibench.pluginmanager.gui2.NeedsRestartListener;
 
 /**
  * @author Miguel Reboiro Jato
@@ -61,7 +73,7 @@ public class PluginInformationPane extends JScrollPane {
 	/**
 	 * 
 	 */
-	private static final int UID_INDEX = 0;
+	private static final int UID_INDEX = 1;
 //	/**
 //	 * 
 //	 */
@@ -69,21 +81,32 @@ public class PluginInformationPane extends JScrollPane {
 	/**
 	 * 
 	 */
-	private static final int ENABLED_INDEX = 4;
+	private static final int ENABLED_INDEX = 5;
 	/**
 	 * 
 	 */
-	private static final int DOWNLOAD_INDEX = 5;
+	private static final int DOWNLOAD_INDEX = 6;
 	private static final String ROOT_LABEL = "Plugins";
 	
-	private static final List<String> COLUMN_NAMES = Arrays.asList(new String[] {
-		"Plugin/Dependency",
-		"Version",
-		"Version Required",
-		"Active",
-		"Enabled",
-		"Update"
-	});
+	private static final List<String> COLUMN_NAMES = new ArrayList<String>();
+	private ArrayList<NeedsRestartListener> listeners = new ArrayList<NeedsRestartListener>();
+	
+	private static Set<String> pluginsToNotShow = new HashSet<String>();
+	
+	static {
+		COLUMN_NAMES.add("Name");
+		COLUMN_NAMES.add("Plugin/Dependencies");
+		COLUMN_NAMES.add("Version");
+		COLUMN_NAMES.add("Version Required");
+		COLUMN_NAMES.add("Active");
+		COLUMN_NAMES.add("Enabled");
+		COLUMN_NAMES.add("Update");
+		
+		pluginsToNotShow.add("aibench.core");
+		pluginsToNotShow.add("aibench.workbench");
+		pluginsToNotShow.add("aibench.pluginmanager");
+
+	}
 	
 	private final JXTreeTable pluginsTreeTable = new JXTreeTable();
 	private PluginInformationTreeTableModel treeTableModel;
@@ -112,35 +135,70 @@ public class PluginInformationPane extends JScrollPane {
 				PluginInformationPane.this.pluginsTreeTableMouseClicked(e);
 			}
 		});
+//		hideIDPluginsColumn();
+	}
+	
+	public void hideIDPluginsColumn(){
+		this.pluginsTreeTable.getColumnExt(UID_INDEX).setWidth(0);
+		this.pluginsTreeTable.getColumnExt(UID_INDEX).setMinWidth(0);
+		this.pluginsTreeTable.getColumnExt(UID_INDEX).setMaxWidth(0);
+		
 	}
 	
 	private synchronized void updateModel() {
-		final InformationTreeTableNode root = 
-			new InformationTreeTableNode(PluginInformationPane.ROOT_LABEL);
+		InformationTreeTableNode root = new InformationTreeTableNode(PluginInformationPane.ROOT_LABEL);
 		InformationTreeTableNode node, leaf;
-		
 		for (Plugin plugin:PluginManager.getInstance().getActivePlugins()) {
-			node = new PluginTreeTableNode(plugin);
-			for (Dependency dependency:plugin.getDependencies()) {
-				leaf = new DependencyTreeTableNode(dependency);
-				node.add(leaf);
-			}
 			
-			root.add(node);
+			if(!pluginsToNotShow.contains(plugin.getUID())){
+				node = new PluginTreeTableNode(plugin);
+				for (Dependency dependency:plugin.getDependencies()) {
+					if(!pluginsToNotShow.contains(dependency.getResolveToPluginUID())){
+						leaf = new DependencyTreeTableNode(dependency);
+						node.add(leaf);
+					}
+				}
+				
+				root.add(node);
+			}
 		}
-		
 		for (Plugin plugin:PluginManager.getInstance().getInactivePlugins()) {
-			node = new PluginTreeTableNode(plugin);
-			for (Dependency dependency:plugin.getDependencies()) {
-				leaf = new DependencyTreeTableNode(dependency);
-				node.add(leaf);
+			if(!pluginsToNotShow.contains(plugin.getUID())){
+				node = new PluginTreeTableNode(plugin);
+				for (Dependency dependency:plugin.getDependencies()) {
+					if(!pluginsToNotShow.contains(dependency.getResolveToPluginUID())){
+						leaf = new DependencyTreeTableNode(dependency);
+						node.add(leaf);
+					}
+				}
+				
+				root.add(node);
 			}
-			
-			root.add(node);
 		}
 		this.treeTableModel = new PluginInformationTreeTableModel(root);
 		this.pluginsTreeTable.setTreeTableModel(this.treeTableModel);
-		
+		treeTableModel.addTreeModelListener(new TreeModelListener() {
+			
+			public void treeStructureChanged(TreeModelEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void treeNodesRemoved(TreeModelEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void treeNodesInserted(TreeModelEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void treeNodesChanged(TreeModelEvent arg0) {
+				updateListeners();
+				
+			}
+		});
 		this.pluginsTreeTable.packAll();
 	}
 	
@@ -187,13 +245,13 @@ public class PluginInformationPane extends JScrollPane {
 			if (!adapter.isSelected()) {
 				Color ok, error, disabled;
 				if (adapter.getDepth() == 1) {
-					ok = new Color(0, 128, 128);
+					ok = new Color(215, 250, 45);
 					error = new Color(204, 0, 20);
-					disabled = Color.darkGray;
+					disabled = new Color(105,105,105);
 				} else {
-					ok = new Color(208, 217, 146);
+					ok = new Color(215, 224, 40);
 					error = new Color(230, 80, 70);
-					disabled = Color.lightGray;
+					disabled = new Color(150,150,150);
 				}
 				Object value = adapter.getValue(PluginInformationPane.UID_INDEX);
 				if (value instanceof String) {
@@ -231,18 +289,26 @@ public class PluginInformationPane extends JScrollPane {
 	
 	private class InformationTreeTableNode extends DefaultMutableTreeTableNode {
 		/**
-		 * @param userObject
+		 * 
 		 */
-		public InformationTreeTableNode(Object userObject) {
-			super(userObject);
+		public InformationTreeTableNode() {
+			super();
 		}
-		
+
 		/**
 		 * @param userObject
 		 * @param allowsChildren
 		 */
-		public InformationTreeTableNode(Object userObject, boolean allowsChildren) {
+		public InformationTreeTableNode(Object userObject,
+				boolean allowsChildren) {
 			super(userObject, allowsChildren);
+		}
+
+		/**
+		 * @param userObject
+		 */
+		public InformationTreeTableNode(Object userObject) {
+			super(userObject);
 		}
 		
 		/* (non-Javadoc)
@@ -300,6 +366,7 @@ public class PluginInformationPane extends JScrollPane {
 		@Override
 		public void setValueAt(Object value, int column) {
 			if (column == PluginInformationPane.ENABLED_INDEX && value instanceof Boolean) {
+				
 				PluginManager.getInstance().setEnabled(this.plugin, (Boolean) value);
 				PluginInformationPane.this.repaint();
 			}
@@ -312,14 +379,17 @@ public class PluginInformationPane extends JScrollPane {
 		public Object getValueAt(int column) {
 			switch(column) {
 			case 0:
-				return this.plugin.getUID();
+//				return this.plugin.getUID();
+				return this.plugin.getName();
 			case 1:
+				return this.plugin.getUID();
+			case 2:
 				return this.plugin.getVersion();
-			case 3:
-				return PluginManager.getInstance().isActive(this.plugin);
 			case 4:
-				return PluginManager.getInstance().isEnabled(this.plugin);
+				return PluginManager.getInstance().isActive(this.plugin);
 			case 5:
+				return PluginManager.getInstance().isEnabled(this.plugin);
+			case 6:
 				return this.plugin.getUID();
 			default:
 				return super.getValueAt(column);
@@ -357,10 +427,12 @@ public class PluginInformationPane extends JScrollPane {
 			if (this.dependency == null) return null;
 			switch(column) {
 			case 0:
-				return this.dependency.getResolveToPluginUID();
+				return this.dependency.getResolvedToPlugin().getName();
 			case 1:
-				return (this.plugin == null)?"none":this.plugin.getVersion();
+				return this.dependency.getResolveToPluginUID();
 			case 2:
+				return (this.plugin == null)?"none":this.plugin.getVersion();
+			case 3:
 				String toret = "";
 				if (this.dependency.getRequiredVersion() != null) {
 					toret = this.dependency.getRequiredVersion().toString();
@@ -373,16 +445,26 @@ public class PluginInformationPane extends JScrollPane {
 						toret += " - Optional";
 				}
 				return toret;
-			case 3:
-				return PluginManager.getInstance().isActive(this.dependency.getResolveToPluginUID());
 			case 4:
-				return PluginManager.getInstance().isEnabled(this.dependency.getResolveToPluginUID());
+				return PluginManager.getInstance().isActive(this.dependency.getResolveToPluginUID());
 			case 5:
+				return PluginManager.getInstance().isEnabled(this.dependency.getResolveToPluginUID());
+			case 6:
 				if (PluginManager.getInstance().isDownloaderActive()) {
 					PluginInfo install = PluginManager.getInstance().getDownloadPluginInfo(this.dependency.getResolveToPluginUID());
-					if (!PluginManager.getInstance().pluginExists(this.dependency.getResolveToPluginUID()) && install != null) {
+					
+//					System.out.println(dependency.getResolveToPluginUID());
+////					PluginManager.getInstance().getPluginInstallInfo(uid)
+//					System.out.println(dependency.getRequiredVersion());
+//					try {
+//						System.out.println(install.getPluginVersion());
+//					} catch (PluginEngineException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+					if (install != null && !PluginManager.getInstance().pluginExists(this.dependency.getResolveToPluginUID())) {
 						try {
-							if (this.dependency.getRequiredVersion().compareTo(install.getPluginVersion()) == 0) {
+							if (this.dependency.getRequiredVersion()!= null && this.dependency.getRequiredVersion().compareTo(install.getPluginVersion()) == 0) {
 								return install.getUID();
 							}
 						} catch (PluginEngineException e) {
@@ -390,10 +472,37 @@ public class PluginInformationPane extends JScrollPane {
 						}
 					}
 				}
-				return null;
+				return "";
 			default:
 				return super.getValueAt(column);
 			}
 		}
+	}
+	
+	public void setHideColumns(int c){
+		pluginsTreeTable.removeColumn(pluginsTreeTable.getColumn(c));
+	}
+	
+	private void updateListeners(){
+		for (NeedsRestartListener n : listeners) {
+			n.needsToRestart();
+		}
+	}
+
+	/**
+	 * @param l
+	 */
+	public void addNeedToRestartListener(NeedsRestartListener l) {
+		listeners.add(l);
+		
+	}
+
+	/**
+	 * @param l
+	 */
+	public void removeNeedToRestartListener(NeedsRestartListener l) {
+		if(listeners!=null)
+			listeners.remove(l);
+		
 	}
 }

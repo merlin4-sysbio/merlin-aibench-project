@@ -1,25 +1,4 @@
 /*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
-/*
 Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
 
 
@@ -56,23 +35,44 @@ package org.platonos.pluginengine.version;
 public final class PluginInstanceVersion extends PluginSingleVersion {
 	private final String buildVersion;
 	
+	/**
+	 * 
+	 */
 	public PluginInstanceVersion() {
 		this(0, 0, 0, "");
 	}
 
+	/**
+	 * @param releaseVersion
+	 */
 	public PluginInstanceVersion(int releaseVersion) {
 		this(releaseVersion, 0, 0, "");
 	}
 
+	/**
+	 * @param releaseVersion
+	 * @param updateVersion
+	 */
 	public PluginInstanceVersion(int releaseVersion, int updateVersion) {
 		this(releaseVersion, updateVersion, 0, "");
 	}
 
+	/**
+	 * @param releaseVersion
+	 * @param updateVersion
+	 * @param patchVersion
+	 */
 	public PluginInstanceVersion(int releaseVersion, int updateVersion,
 			int patchVersion) {
 		this(releaseVersion, updateVersion, patchVersion, "");
 	}
 
+	/**
+	 * @param releaseVersion
+	 * @param updateVersion
+	 * @param patchVersion
+	 * @param buildVersion
+	 */
 	public PluginInstanceVersion(int releaseVersion, int updateVersion,
 			int patchVersion, String buildVersion) {
 		super(releaseVersion, updateVersion, patchVersion);
@@ -85,8 +85,6 @@ public final class PluginInstanceVersion extends PluginSingleVersion {
 
 	/**
 	 * Returns a String representation of this version, excluding the build version.
-	 * 
-	 * @return a String representation of this version, excluding the build version.
 	 */
 	public String getFullVersion () {
 		return String.format("%d.%d.%d", this.getReleaseVersion(), this.getUpdateVersion(), this.getPatchVersion());
@@ -126,10 +124,7 @@ public final class PluginInstanceVersion extends PluginSingleVersion {
 	}
 
 	/**
-	 * Returns {@code false} if the specified Object is not a PluginVersion instance or it has release, update, patch, or build versions
-	 * that differ from this PluginVersion.
-	 * 
-	 * @return {@code false} if the specified Object is not a PluginVersion instance or it has release, update, patch, or build versions
+	 * Returns false if the specified Object is not a PluginVersion instance or it has release, update, patch, or build versions
 	 * that differ from this PluginVersion.
 	 */
 	@Override
@@ -145,6 +140,9 @@ public final class PluginInstanceVersion extends PluginSingleVersion {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.platonos.pluginengine.PluginVersion#toString()
+	 */
 	@Override
 	public String toString() {
 		String release = (this.getReleaseVersion() <= 0)?"0":Integer.toString(this.getReleaseVersion());

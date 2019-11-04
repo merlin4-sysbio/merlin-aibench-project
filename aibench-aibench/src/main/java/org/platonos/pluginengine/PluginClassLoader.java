@@ -1,24 +1,13 @@
-/*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
 package org.platonos.pluginengine;
 
@@ -51,8 +40,6 @@ import java.util.zip.ZipInputStream;
 
 import org.platonos.pluginengine.logging.ILogger;
 import org.platonos.pluginengine.logging.LoggerLevel;
-
-import es.uvigo.ei.aibench.Util;
 
 /**
  * Loads classes and resources from Plugin archives and embedded libraries without unpacking the archive to disk and reverses the
@@ -99,13 +86,13 @@ final class PluginClassLoader extends URLClassLoader {
 			classpath = new URL[] {pluginURL};
 		} else {
 			// Add any libraries found in the exploded directory plugin to the classpath.
-			File archive = Util.urlToFile(pluginURL);
+			File archive = new File(pluginURL.getFile());
 			File[] libraryFiles = archive.listFiles(embeddedLibraryFilter);
 			classpath = new URL[libraryFiles.length + 1];
 			classpath[0] = pluginURL;
 			for (int i = 0; i < libraryFiles.length; i++) {
 				try {
-					classpath[i + 1] = libraryFiles[i].toURI().toURL();
+					classpath[i + 1] = libraryFiles[i].toURL();
 				} catch (MalformedURLException ex) {
 					plugin.getPluginEngine().getLogger().log(LoggerLevel.WARNING,
 						"Error adding library to URL classpath: " + libraryFiles[i], ex);
@@ -242,18 +229,7 @@ final class PluginClassLoader extends URLClassLoader {
 			return null;
 		}
 	}
-	
-	/**
-         * Called by the getResource method when it is looking to find a resource in a dependent loader.
-         */
-        private URL getResourceFromDependentLoader (String name) {
-               synchronized (plugin) {}
 
-               URL url = getResourceFromClassPath(name);
-               logger.log(LoggerLevel.FINE, "Found resource in dependent Plugin \"" + plugin + "\": " + name, null);
-               return url;                
-        }
-        
 	/**
 	 * Overrides findClass to handle Plugin archive file lookup.
 	 */
@@ -289,7 +265,6 @@ final class PluginClassLoader extends URLClassLoader {
 
 					String libName = (String)packagesMap.get(packageName);
 					try {
-						@SuppressWarnings("resource")
 						ZipFile parFile = new ZipFile(getURLs()[0].getFile());
 						ZipInputStream libInput = new ZipInputStream(parFile.getInputStream(parFile.getEntry(libName)));
 						ZipEntry entry;
@@ -340,61 +315,39 @@ final class PluginClassLoader extends URLClassLoader {
 	}
 
 	/**
-         * Called by the getResource method to find a resource within a plugin's classpath.
-         */
-	private URL getResourceFromClassPath(final String name) {
-                URL url = findResource(name);
-                
-                if (url == null && plugin.isArchive()) {
-                
-                        url = AccessController.doPrivileged(new PrivilegedAction<URL>() {
-                                public URL run () {
-                                        return ucp.getParResource(name);
-                                }
-                        }, acc);
-                
-                }
-
-                if (url == null) {
-                        if (getParent() != null) {
-                                url = getParent().getResource(name);
-                
-
-                        } else {
-                                url = ClassLoader.getSystemResource(name);
-                        }
-                }
-
-                if (url != null) {
-                        // Make resource access start the plugin.
-                        if (!plugin.start()) {
-                                url = null;
-                                logger.log(LoggerLevel.WARNING, "Unable to start Plugin \"" + plugin + "\". Resource cannot be acquired: "
-                                        + name, null);
-                        }
-                }
-                return url;
-	}
-	
-	/**
 	 * Gets the first resource with the given name or null if it is not found. Looks first in the URLClassPath of the Plugin, if
 	 * the resource is not found then if there is a parent the parent URLClassPath is checked, else the bootstrap URLClassPath is
 	 * used.
 	 * @return The URL of the resource or null if the resource is not found.
 	 */
 	public URL getResource (final String name) {
-		
-		URL url = getResourceFromClassPath(name);
-                
-                if (url == null) {
-                        // The resource is not yet found. Look in dependencies.
-                        for (Dependency dependency:plugin.getDependencies()) {                                
-                                if (!dependency.isResolved()) continue; // Dependency is unresolved.                                
-                                url = dependency.getResolvedToPlugin().pluginClassloader.getResourceFromDependentLoader(name);
-                                
-                                if (url != null) break;
-                        }
-                }
+		URL url = findResource(name);
+
+		if (url == null && plugin.isArchive()) {
+			url = AccessController.doPrivileged(new PrivilegedAction<URL>() {
+				public URL run () {
+					return ucp.getParResource(name);
+				}
+			}, acc);
+		}
+
+		if (url == null) {
+			if (getParent() != null) {
+				url = getParent().getResource(name);
+			} else {
+				url = ClassLoader.getSystemResource(name);
+			}
+		}
+
+		if (url != null) {
+			// Make resource access start the plugin.
+			if (!plugin.start()) {
+				url = null;
+				logger.log(LoggerLevel.WARNING, "Unable to start Plugin \"" + plugin + "\". Resource cannot be acquired: "
+					+ name, null);
+			}
+		}
+
 		return url;
 	}
 
@@ -420,7 +373,6 @@ final class PluginClassLoader extends URLClassLoader {
 	 */
 	private synchronized void buildPackagesMap () {
 		try {
-			@SuppressWarnings("resource")
 			ZipFile zipFile = new ZipFile(plugin.getPluginURL().getFile());
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			while (entries.hasMoreElements()) {
@@ -580,8 +532,7 @@ final class PluginClassLoader extends URLClassLoader {
 			return urls;
 		}
 
-		@SuppressWarnings("unused")
-		public void addURL(URL url) {
+		public void addURL (URL url) {
 			URL[] temp = urls;
 			urls = new URL[temp.length + 1];
 			System.arraycopy(temp, 0, urls, 0, temp.length);
@@ -593,7 +544,6 @@ final class PluginClassLoader extends URLClassLoader {
 			return null != url ? url : null;
 		}
 
-		@SuppressWarnings("unused")
 		public Enumeration<URL> findResources (final String name, final boolean check) {
 			return new Enumeration<URL>() {
 				URL url = findResource(name, check);
@@ -619,7 +569,6 @@ final class PluginClassLoader extends URLClassLoader {
 		 * @param name The name of the resource within the Plugin archive file to find.
 		 * @return The URL of the resource or null if the resource doens't exist.
 		 */
-		@SuppressWarnings("resource")
 		private URL getParResource (String name) {
 			if (packagesMap.isEmpty()) buildPackagesMap();
 			int index = name.lastIndexOf('/');

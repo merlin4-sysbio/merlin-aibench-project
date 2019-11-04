@@ -1,24 +1,13 @@
-/*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
 package org.platonos.pluginengine;
 
@@ -93,7 +82,7 @@ public class Extension {
 	}
 
 	/**
-	 * @return the class name of the extension class or null if there is no extension class. The "class" attribute is optional for
+	 * Returns the class name of the extension class or null if there is no extension class. The "class" attribute is optional for
 	 * the "extension" element in the plugin.xml.
 	 */
 	public String getExtensionClassName () {
@@ -101,7 +90,7 @@ public class Extension {
 	}
 
 	/**
-	 * @return the extension class or null if there is no extension class.
+	 * Returns the extension class or null if there is no extension class.
 	 * @see #getExtensionClassName()
 	 */
 	public Class<?> getExtensionClass () {
@@ -121,7 +110,7 @@ public class Extension {
 	}
 
 	/**
-	 * @return the extension class instance or null if there is no extension class. The Extension instance is not created until
+	 * Returns the extension class instance or null if there is no extension class. The Extension instance is not created until
 	 * this method is called for the first time. The extension class will only be created once for an Extension. If an instance is
 	 * returned, the Extension's Plugin is sure to be started by the Class access. If null is returned, the Extension's Plugin may
 	 * or may not be started. Due to classloading issues, an extension class cannot access package-private classes and members.
@@ -167,21 +156,21 @@ public class Extension {
 	}
 
 	/**
-	 * @return the Plugin that this Extension belongs to.
+	 * Returns the Plugin that this Extension belongs to.
 	 */
 	public Plugin getPlugin () {
 		return plugin;
 	}
 
 	/**
-	 * @return the PluginEngine instance that this Extension belongs to.
+	 * Returns the PluginEngine instance that this Extension belongs to.
 	 */
 	public PluginEngine getPluginEngine () {
 		return plugin.getPluginEngine();
 	}
 
 	/**
-	 * @return the ExtensionPoint that this Extension is resolved to or null if it is not yet resolved.
+	 * Returns the ExtensionPoint that this Extension is resolved to or null if it is not yet resolved.
 	 */
 	public ExtensionPoint getExtensionPoint () {
 		return resolvedToExtensionPoint;
@@ -189,8 +178,6 @@ public class Extension {
 
 	/**
 	 * Resolves this Extension to the specified ExtensionPoint.
-	 * 
-	 * @param resolvedToExtensionPoint the ExtensionPoint to which this Extension is resolved.
 	 */
 	void resolve (ExtensionPoint resolvedToExtensionPoint) {
 		if (this.resolvedToExtensionPoint != null)
@@ -214,7 +201,7 @@ public class Extension {
 	}
 
 	/**
-	 * @return the XML that represents the "extension" XML element and its child elements in the plugin.xml file. This is more
+	 * Returns the XML that represents the "extension" XML element and its child elements in the plugin.xml file. This is more
 	 * efficient than calling <code>getExtensionXmlNode().toXML()</code>.
 	 */
 	public String getExtensionXml () {
@@ -222,7 +209,7 @@ public class Extension {
 	}
 
 	/**
-	 * @return the PluginXmlNode that represents the "extension" XML element in the plugin.xml file. This allows for use of the XML
+	 * Returns the PluginXmlNode that represents the "extension" XML element in the plugin.xml file. This allows for use of the XML
 	 * provided by the Extension.
 	 */
 	public PluginXmlNode getExtensionXmlNode () {
@@ -231,8 +218,6 @@ public class Extension {
 
 	/**
 	 * Sets the root PluginXmlNode for this Extension.
-	 * 
-	 * @param extensionXmlNode the PluginXmlNode for this extension.
 	 */
 	public void setExtensionXmlNode (PluginXmlNode extensionXmlNode) {
 		if (extensionXmlNode == null) throw new NullPointerException("Invalid argument: extensionXmlNode");
@@ -241,27 +226,23 @@ public class Extension {
 	}
 
 	/**
-	 * @return the Plugin UID of the ExtensionPoint that this Extension resolves to.
+	 * Returns the Plugin UID of the ExtensionPoint that this Extension resolves to.
 	 */
 	public String getExtensionPointPluginUID () {
 		return extensionPointPluginUID;
 	}
 
 	/**
-	 * @return the name of the ExtensionPoint that this Extension resolves to.
+	 * Returns the name of the ExtensionPoint that this Extension resolves to.
 	 */
 	public String getExtensionPointName () {
 		return extensionPointName;
 	}
 
 	/**
-	 * @param className the name of the class of the returned instance.
-	 * @return a new instance of the specified class name using the classloader of this Extension's Plugin. Use this method to
+	 * Returns a new instance of the specified class name using the classloader of this Extension's Plugin. Use this method to
 	 * obtain a new instance of a class defined in this Extension's Plugin. This is often done when the Extension provides
 	 * classnames within its XML (see {@link #getExtensionXmlNode()}).
-	 * @throws ClassNotFoundException if the provided class could not be loaded.
-	 * @throws InstantiationException if if was not possible to create an instance of the provided class.
-	 * @throws IllegalAccessException if the class or its nullary constructor is not accessible. 
 	 */
 	public Object getNewInstance (String className) throws ClassNotFoundException, InstantiationException,
 		IllegalAccessException {
@@ -270,12 +251,8 @@ public class Extension {
 	}
 
 	/**
-	 * @param className the name of the class of the returned instance.
-	 * @return an instance of the specified class name using the classloader from this Extension's Plugin. Subsequent calls with
+	 * Returns an instance of the specified class name using the classloader from this Extension's Plugin. Subsequent calls with
 	 * the same class name will return the same instance.
-	 * @throws ClassNotFoundException if the provided class could not be loaded.
-	 * @throws InstantiationException if if was not possible to create an instance of the provided class.
-	 * @throws IllegalAccessException if the class or its nullary constructor is not accessible. 
 	 * @see #getNewInstance(String)
 	 */
 	public Object getSingleInstance (String className) throws ClassNotFoundException, InstantiationException,

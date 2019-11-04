@@ -90,7 +90,7 @@ public class PluginInformationComponent extends JPanel {
 					try {
 						PluginManager.getInstance().setPluginRepository(newRepository);
 						lblRepository.setText("Repository: " + newRepository);
-//						PluginActionProvider.pluginDownloaderChanged();
+						PluginActionProvider.pluginDownloaderChanged();
 						pluginManagerGUI.addNewPluginsPane();
 						informationPane.repaint();
 					} catch (IOException e1) {
@@ -127,23 +127,23 @@ public class PluginInformationComponent extends JPanel {
 		});
 	}
 
-//	/**
-//	 * @param i
-//	 */
-//	public void setHideColumn(int i) {
-//		informationPane.setHideColumns(i);
-//		
-//	}
-//	
-//	public void addNeedToRestartListener(NeedsRestartListener l){
-//		informationPane.addNeedToRestartListener(l);	
-//	}
-//	
-//	public void removeNeedToRestartListener(NeedsRestartListener l){
-//		if(informationPane!=null)
-//			informationPane.removeNeedToRestartListener(l);	
-//	}
-//	public void hideIDPluginsColumn(){
-//		informationPane.hideIDPluginsColumn();
-//	}
+	/**
+	 * @param i
+	 */
+	public void setHideColumn(int i) {
+		informationPane.setHideColumns(i);
+		
+	}
+	
+	public void addNeedToRestartListener(NeedsRestartListener l){
+		informationPane.addNeedToRestartListener(l);	
+	}
+	
+	public void removeNeedToRestartListener(NeedsRestartListener l){
+		if(informationPane!=null)
+			informationPane.removeNeedToRestartListener(l);	
+	}
+	public void hideIDPluginsColumn(){
+		informationPane.hideIDPluginsColumn();
+	}
 }

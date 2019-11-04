@@ -1,24 +1,13 @@
-/*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
 package org.platonos.pluginengine;
 
@@ -41,8 +30,6 @@ public abstract class PluginLifecycle {
 
 	/**
 	 * Returns the Plugin this PluginLifecycle is managing.
-	 * 
-	 * @return the Plugin this PluginLifecycle is managing.
 	 */
 	public Plugin getPlugin () {
 		if (plugin == null) plugin = PluginEngine.getPlugin(getClass());
@@ -50,10 +37,7 @@ public abstract class PluginLifecycle {
 	}
 
 	/**
-	 * Returns an ExtensionPoint defined in the Plugin this PluginLifecycle manages or {@code null} if the ExtensionPoint does not exist.
-	 * 
-	 * @param name the name of the extension point.
-	 * @return an ExtensionPoint defined in the Plugin this PluginLifecycle manages or {@code null} if the ExtensionPoint does not exist.
+	 * Returns an ExtensionPoint defined in the Plugin this PluginLifecycle manages or null if the ExtensionPoint does not exist.
 	 */
 	public ExtensionPoint getExtensionPoint (String name) {
 		return getPlugin().getExtensionPoint(name);
@@ -61,8 +45,6 @@ public abstract class PluginLifecycle {
 
 	/**
 	 * Returns the PluginEngine of the Plugin this PluginLifecycle is managing.
-	 * 
-	 * @return the PluginEngine of the Plugin this PluginLifecycle is managing.
 	 */
 	public PluginEngine getPluginEngine () {
 		return getPlugin().getPluginEngine();

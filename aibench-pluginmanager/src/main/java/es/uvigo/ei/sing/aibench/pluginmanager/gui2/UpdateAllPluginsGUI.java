@@ -56,7 +56,6 @@ import es.uvigo.ei.aibench.core.ParamSpec;
 import es.uvigo.ei.aibench.core.operation.OperationDefinition;
 import es.uvigo.ei.aibench.repository.NotInitializedException;
 import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
-import es.uvigo.ei.aibench.repository.PluginDownloadInfoEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.workbench.InputGUI;
 import es.uvigo.ei.aibench.workbench.ParamsReceiver;
@@ -327,8 +326,7 @@ public class UpdateAllPluginsGUI extends JDialog implements InputGUI, PluginDown
 	 * 
 	 */
 	protected void restart() {
-//		Util.restart();
-		System.out.println("should restart but i am not working");
+		Util.restart();
 	}
 
 
@@ -411,27 +409,6 @@ public class UpdateAllPluginsGUI extends JDialog implements InputGUI, PluginDown
 	 * @see es.uvigo.ei.aibench.repository.PluginDownloadListener#downloadError(es.uvigo.ei.aibench.repository.PluginDownloadEvent)
 	 */
 	public void downloadError(PluginDownloadEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoStarted(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoFinished(PluginDownloadInfoEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void downloadInfoError(PluginDownloadInfoEvent event) {
 		// TODO Auto-generated method stub
 		
 	}

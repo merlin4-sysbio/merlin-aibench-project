@@ -1,24 +1,13 @@
-/*
- * #%L
- * The AIBench basic runtime and plugin engine
- * %%
- * Copyright (C) 2006 - 2017 Daniel Glez-Peña and Florentino Fdez-Riverola
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Lesser Public License for more details.
- * 
- * You should have received a copy of the GNU General Lesser Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * #L%
- */
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
 package org.platonos.pluginengine;
 
@@ -90,7 +79,7 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @return the name of the class all extension classes are required to implement or null if they are not required to implement
+	 * Returns the name of the class all extension classes are required to implement or null if they are not required to implement
 	 * a specific class.
 	 */
 	public String getInterfaceClassName () {
@@ -98,7 +87,7 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @return the class all extension classes are required to implement or null if they are not required to implement a specific
+	 * Returns the class all extension classes are required to implement or null if they are not required to implement a specific
 	 * class.
 	 */
 	public Class<?> getInterfaceClass () {
@@ -114,28 +103,32 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @return the Plugin that this ExtensionPoint is defined in.
+	 * Returns the Plugin that this ExtensionPoint is defined in.
 	 */
 	public Plugin getPlugin () {
 		return plugin;
 	}
 
 	/**
-	 * @return the PluginEngine instance that this ExtensionPoint is associated with.
+	 * Returns the PluginEngine instance that this ExtensionPoint is associated with.
 	 */
 	public PluginEngine getPluginEngine () {
 		return plugin.getPluginEngine();
 	}
 
 	/**
-	 * @return the name of this ExtensionPoint. This is used to obtain a reference to this ExtensionPoint through the Plugin.
+	 * Returns the name of this ExtensionPoint. This is used to obtain a reference to this ExtensionPoint through the Plugin.
 	 */
 	public String getName () {
 		return name;
 	}
 
+	public String toString () {
+		return getName();
+	}
+
 	/**
-	 * @return a List of Extensions that have resolved to this ExtensionPoint.
+	 * Returns a List of Extensions that have resolved to this ExtensionPoint.
 	 */
 	public List<Extension> getExtensions () {
 		return new ArrayList<Extension>(resolvedExtensions);
@@ -143,7 +136,6 @@ public class ExtensionPoint {
 
 	/**
 	 * Resolves an Extension to this ExtensionPoint.
-	 * @param extension the Extension to which this ExtensionPoint is resolved.
 	 */
 	void addResolvedExtension (Extension extension) {
 		if (resolvedExtensions.contains(extension))
@@ -161,8 +153,7 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @param extension the Extension whose compatibility will be checked.
-	 * @return {@code true} if the specified Extension is compatible with this ExtensionPoint. This method accesses the extension class,
+	 * Returns true if the specified Extension is compatible with this ExtensionPoint. This method accesses the extension class,
 	 * which will cause the Extension's Plugin to be started if the Extension has an extension class.
 	 */
 	public boolean isExtensionCompatible (Extension extension) {
@@ -182,8 +173,7 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @param extension the class of a Extension whose compatibility will be checked.
-	 * @return {@code true} if the specified extension class is compatible with this ExtensionPoint's interface class.
+	 * Returns true if the specified extension class is compatible with this ExtensionPoint's interface class.
 	 */
 	boolean isExtensionClassCompatible (Class<?> extensionClass) {
 		// If the extension point has an interface specified then the extension's
@@ -201,7 +191,7 @@ public class ExtensionPoint {
 	}
 
 	/**
-	 * @return {@code true} if the specified Extension's XML is compatible with this ExtensionPoint's XML schema.
+	 * Returns true if the specified Extension's XML is compatible with this ExtensionPoint's XML schema.
 	 */
 	boolean isExtensionXmlCompatible (Extension extension) {
 		if (schemaFilename != null) {
@@ -220,10 +210,5 @@ public class ExtensionPoint {
 			}
 		}
 		return true;
-	}
-	
-	@Override
-	public String toString () {
-		return getName();
 	}
 }
