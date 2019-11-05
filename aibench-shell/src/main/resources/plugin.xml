@@ -23,7 +23,7 @@
 <plugin start="false">
 	<uid>aibench.shell</uid>
 	<name>AIBench Shell</name>
-	<version>${version}</version>
+	<version>${merlin.version}</version>
 	
 	<lifecycleclass>es.uvigo.ei.sing.aibench.shell.ShellLifecycle</lifecycleclass>
 

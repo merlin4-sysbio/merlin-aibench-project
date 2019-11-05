@@ -162,8 +162,8 @@ public class Util {
 	}
 	
 	/**
-	 * @param string
-	 * @param property
+	 * @param pluginsBin
+	 * @param properties
 	 */
 	public static void registRestarInfo(String pluginsBin, String properties) {
 		Util.pluginsBin = pluginsBin;

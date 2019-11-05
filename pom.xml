@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>pt.uminho.ceb.biosystems.merlin</groupId>
 	<artifactId>merlin-aibench-project</artifactId>
 	<version>2.10.2-SNAPSHOT</version>
-	<!--
-		WARNING: change version using:
-			mvn versions:set -DnewVersion=[new_version]
-			mvn versions:commit
+	<!-- WARNING: change version using: mvn versions:set -DnewVersion=[new_version] 
+		mvn versions:commit This will change the version in all modules at-once WARNING: 
+		Remember to also change the version manually in the docs/source/conf.py file -->
 
-		This will change the version in all modules at-once
-		
-		WARNING: Remember to also change the version manually
-		in the docs/source/conf.py file
-	-->
-	
 	<name>The AIBench Project</name>
-  <description>A Java application development framework focused on GUI-based scientific applications</description>
+	<description>A Java application development framework focused on GUI-based scientific applications</description>
 	<inceptionYear>2006</inceptionYear>
 	<url>http://www.aibench.org</url>
 	<packaging>pom</packaging>
@@ -77,6 +72,7 @@
 		<!-- merlin -->
 		<merlin.plugins.directory>${project.basedir}/../../merlin-aibench/plugins</merlin.plugins.directory>
 		<merlin.lib.directory>${project.basedir}/../../merlin-aibench/lib</merlin.lib.directory>
+		<merlin.version>4.0.2</merlin.version>
 		<!-- General -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -87,7 +83,7 @@
 		<license-maven-plugin.version>1.8</license-maven-plugin.version>
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
-    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
 		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
 		<maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
@@ -170,11 +166,11 @@
 					<version>${maven-compiler-plugin.version}</version>
 				</plugin>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>${maven-gpg-plugin.version}</version>
-        </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>${maven-gpg-plugin.version}</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -200,7 +196,8 @@
 					<version>${maven-source-plugin.version}</version>
 				</plugin>
 
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -255,7 +252,7 @@
 				</executions>
 			</plugin>
 
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<executions>
@@ -264,88 +261,91 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+						<configuration> add this to disable checking
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 
-  <profiles>
-    <profile>
-      <id>sign-artifacts</id>
+	<profiles>
+		<profile>
+			<id>sign-artifacts</id>
 
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-                <configuration>
-                  <keyname>${aibench.gpg.keyname}</keyname>
-                  <passphraseServerId>${aibench.gpg.passphraseServerId}</passphraseServerId>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<keyname>${aibench.gpg.keyname}</keyname>
+									<passphraseServerId>${aibench.gpg.passphraseServerId}</passphraseServerId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
-    <profile>
-      <id>sing-repository</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <distributionManagement>
-        <repository>
-          <id>sing-maven-releases</id>
-          <name>SING Maven Releases</name>
-          <url>https://maven.sing-group.org/repository/maven-releases</url>
-        </repository>
+		<profile>
+			<id>sing-repository</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>sing-maven-releases</id>
+					<name>SING Maven Releases</name>
+					<url>https://maven.sing-group.org/repository/maven-releases</url>
+				</repository>
 
-        <snapshotRepository>
-          <id>sing-maven-snapshots</id>
-          <name>SING Maven Snapshots</name>
-          <url>https://maven.sing-group.org/repository/maven-snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
+				<snapshotRepository>
+					<id>sing-maven-snapshots</id>
+					<name>SING Maven Snapshots</name>
+					<url>https://maven.sing-group.org/repository/maven-snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
 
-    <profile>
-      <id>maven-central-repository</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <distributionManagement>
-        <repository>
-          <id>maven-central-releases</id>
-          <name>Maven Central Releases</name>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
+		<profile>
+			<id>maven-central-repository</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>maven-central-releases</id>
+					<name>Maven Central Releases</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+				</repository>
 
-        <snapshotRepository>
-          <id>maven-central-snapshots</id>
-          <name>Maven Central Snapshots</name>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
-  </profiles>
-  
-  <repositories>
+				<snapshotRepository>
+					<id>maven-central-snapshots</id>
+					<name>Maven Central Snapshots</name>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
+	<repositories>
 		<repository>
 			<id>nexus</id>
 			<name>Nexus BioSystems Server</name>
 			<url>https://nexus.bio.di.uminho.pt/content/groups/public/</url>
-	        <releases>
-	           <enabled>true</enabled>
-	        </releases>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
 		</repository>
 
 		<repository>
@@ -354,9 +354,9 @@
 			<url>http://maven.sing-group.org/repository/maven/</url>
 		</repository>
 	</repositories>
-	
-  
-  <distributionManagement>
+
+
+	<distributionManagement>
 		<snapshotRepository>
 			<id>biosystems-snapshots</id>
 			<url>https://nexus.bio.di.uminho.pt/content/repositories/biosystems-snapshots</url>

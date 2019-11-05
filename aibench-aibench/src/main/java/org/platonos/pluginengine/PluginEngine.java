@@ -438,6 +438,8 @@ public final class PluginEngine {
 	private void loadPluginXML(URL pluginXmlURL) throws PluginEngineException {
 		// Marshal the plugin.xml file into a Plugin instance.
 		
+		System.out.println(pluginXmlURL.toString());
+		
 		Plugin plugin = null;
 		try{
 			plugin = PluginXmlParser.parse(this, pluginXmlURL);
@@ -467,6 +469,7 @@ public final class PluginEngine {
 	 *           if the Plugin could not be added.
 	 */
 	public void loadPlugin(Plugin plugin) throws PluginEngineException {
+		System.out.println("aqui1 - " + plugin);
 		if (plugin == null) {
 			throw new NullPointerException("Invalid argument: plugin");
 		}
@@ -483,15 +486,20 @@ public final class PluginEngine {
 		if (plugin.isLoaded()) {
 			return;
 		}
+		
+		System.out.println("aqui2 - " + this.isLoadPlugin(plugin));
 
 		if (this.isLoadPlugin(plugin)) {
 			String pluginUID = plugin.getUID();
+			System.out.println("aqui3 - " + pluginUID);
 			
 			List<Plugin> pluginList = plugins.get(pluginUID);
+			System.out.println("aqui4 " + pluginList);
 			if (pluginList == null) {
 				// This is the first plugin to be loaded with this UID.
 				pluginList = new ArrayList<Plugin>(1);
 				plugins.put(pluginUID, pluginList);
+				System.out.println("aqui 5 " + plugins);
 			} else {
 				// Check to see if this plugin is already loaded.
 				for (Plugin existingPlugin:pluginList) {
@@ -838,6 +846,10 @@ public final class PluginEngine {
 		unresolvedPlugins.remove(plugin);
 		unloadedPlugins.add(plugin);
 
+		System.out.println();
+		System.out.println("REMOVING THE PLUGINS");
+		System.out.println();
+		
 		// Remove plugin from registry.
 		pluginList.remove(plugin);
 		if (pluginList.isEmpty()) {
@@ -990,6 +1002,9 @@ public final class PluginEngine {
 			allPlugins.addAll(pluginList);
 		}
 		
+		System.out.println("all " + allPlugins.size());
+		System.out.println(allPlugins);
+		
 		return allPlugins;
 	}
 	
@@ -1025,7 +1040,15 @@ public final class PluginEngine {
 	 */
 	public List<Plugin> getLoadedPlugins() {
 		List<Plugin> loadedPlugins = this.getPlugins();
+		
+		System.out.println("loaded " + loadedPlugins);
+		
+		System.out.println("unloaded " + this.getUnloadedPlugins());
+		
 		loadedPlugins.remove(this.getUnloadedPlugins());
+		
+		System.out.println(loadedPlugins);
+		
 		return Collections.unmodifiableList(loadedPlugins);
 	}
 	

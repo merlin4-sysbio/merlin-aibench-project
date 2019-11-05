@@ -247,10 +247,6 @@ public class PluginDownloader {
 		return this.infoFile;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	public String getInfoFileURL() {
 		return this.getFileURL(this.infoFile);
 	}

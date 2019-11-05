@@ -170,8 +170,10 @@ public class Launcher {
 		PluginEngine engine = Launcher.getPluginEngine();
 
 		if (System.getProperty("aibench.nogui") == null) {
+		
 			engine.addPluginEngineListener(splash);
-		} else {
+		} 
+		else {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				/**
 				 * Performs the plugin engine shutdown.
