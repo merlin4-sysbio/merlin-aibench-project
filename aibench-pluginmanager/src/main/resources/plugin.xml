@@ -20,7 +20,7 @@
   <http://www.gnu.org/licenses/lgpl-3.0.html>.
   #L%
   -->
-<plugin start="true">
+<plugin start="false">
 	<uid>aibench.pluginmanager</uid>
 	<name>AIBench Plugin Manager</name>
 	<version>${merlin.version}</version>

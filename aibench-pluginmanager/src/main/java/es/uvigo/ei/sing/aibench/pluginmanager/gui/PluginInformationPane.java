@@ -54,8 +54,10 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import org.jdesktop.swingx.treetable.TreeTableNode;
 import org.platonos.pluginengine.Dependency;
 import org.platonos.pluginengine.Plugin;
+import org.platonos.pluginengine.PluginEngine;
 import org.platonos.pluginengine.PluginEngineException;
 
+import es.uvigo.ei.aibench.Launcher;
 import es.uvigo.ei.aibench.repository.info.PluginInfo;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
 import es.uvigo.ei.sing.aibench.pluginmanager.gui2.NeedsRestartListener;
@@ -148,6 +150,7 @@ public class PluginInformationPane extends JScrollPane {
 	private synchronized void updateModel() {
 		InformationTreeTableNode root = new InformationTreeTableNode(PluginInformationPane.ROOT_LABEL);
 		InformationTreeTableNode node, leaf;
+		
 		for (Plugin plugin:PluginManager.getInstance().getActivePlugins()) {
 			
 			if(!pluginsToNotShow.contains(plugin.getUID())){

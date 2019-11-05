@@ -606,6 +606,7 @@ public class MainWindow extends JFrame {
 		}
 
 		for (int i = 0; i < views.size(); i++) {
+			
 			if (LOGGER.getEffectiveLevel().equals(Level.DEBUG)) {
 				LOGGER.debug("Adding view " + views.get(i));
 			}
@@ -619,6 +620,7 @@ public class MainWindow extends JFrame {
 				}
 				public void run(){
 					final RenderingMessageComponent renderingMessage = new RenderingMessageComponent("Rendering view \""+view.getViewName()+"\", please wait...");
+				
 					SwingUtilities.invokeLater(new Runnable(){
 						public void run(){
 							synchronized(viewsComponent){
@@ -665,15 +667,73 @@ public class MainWindow extends JFrame {
 			};
 
 			new RenderingThread(viewsComponent).start();
-
 		}
-
+		
 		this.getDocumentTabbedPane().addTab(getTabTitle(data), null, viewsComponent);
 		int viewsComponentIndex = getDocumentTabbedPane().indexOfComponent(viewsComponent);
 		this.getDocumentTabbedPane().setSelectedIndex(viewsComponentIndex);
-
+		
 		this.itemToTabIndex.put(data, viewsComponentIndex);
 		this.tabIndexToItem.put(viewsComponentIndex, data);
+	}
+	
+	
+	public void showViewsMerlin(final List<IViewFactory> views, final ClipboardItem data) {
+		final JTabbedPane tabbedViews = new JTabbedPane();
+		
+		tabbedViews.setTabPlacement(JTabbedPane.BOTTOM);
+		
+		for (int i = 0; i < views.size(); i++) {
+			final int j = i;
+			if (LOGGER.getEffectiveLevel().equals(Level.DEBUG)) {
+				LOGGER.debug("Adding view " + views.get(i));
+			}
+			
+			final RenderingMessageComponent renderingMessage = new RenderingMessageComponent("Rendering view \"" + views.get(i).getViewName() + "\", please wait...");
+			synchronized (tabbedViews) {
+				tabbedViews.add(renderingMessage, views.get(j).getViewName());
+			}
+			new Thread() {
+				public void run() {
+					final JComponent component = views.get(j).getComponent(data.getUserData());
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							synchronized (tabbedViews) {
+								// find tab placement of renderingMessage
+								for (int i = 0; i < tabbedViews.getTabCount(); i++) {
+									if (tabbedViews.getComponentAt(i) == renderingMessage) {
+										if (component instanceof Scrollable) {
+											tabbedViews.setComponentAt(i, new JScrollPane(component));
+										} else {
+											tabbedViews.setComponentAt(i, component);
+										}
+									}
+								}
+							}
+						}
+					});
+				}
+			}.start();
+			
+		}
+		
+		// We don't want tab titles too long!!
+		String title = data.getName();
+		if (title.length() > MAX_TAB_TITLE) {
+			title = title.substring(0, MAX_TAB_TITLE);
+			
+			title += "...";
+		}
+		
+		
+		this.getDocumentTabbedPane().addTab(getTabTitle(data), null, tabbedViews);
+		int viewsComponentIndex = getDocumentTabbedPane().indexOfComponent(tabbedViews);
+		this.getDocumentTabbedPane().setSelectedIndex(viewsComponentIndex);
+		
+		// getDocumentTabbedPane().setMaxIcon(false);
+		
+		this.itemToTabIndex.put(data, getDocumentTabbedPane().indexOfComponent(tabbedViews));
+		this.tabIndexToItem.put(getDocumentTabbedPane().indexOfComponent(tabbedViews), data);
 	}
 
 	protected static String getTabTitle(ClipboardItem data) {

@@ -998,6 +998,10 @@ public final class PluginEngine {
 	public List<Plugin> getPlugins() {
 		// This is inefficient because of how the plugins are stored. Fortunately this method is rarely used.
 		ArrayList<Plugin> allPlugins = new ArrayList<Plugin>(plugins.size());
+		
+		System.out.println("plugins.size() "+plugins.size());
+		System.out.println("plugins.values() "+plugins.values());
+		
 		for (List<Plugin> pluginList:plugins.values()) {
 			allPlugins.addAll(pluginList);
 		}

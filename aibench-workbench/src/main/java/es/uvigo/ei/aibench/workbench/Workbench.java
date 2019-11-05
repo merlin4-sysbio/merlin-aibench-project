@@ -361,7 +361,7 @@ public class Workbench implements IGenericGUI, ClipboardListener {
 						 * Data have already been showed, but it's closed. We have
 						 * to show it again.
 						 */
-						this.mainWindow.showViews(copied, data);
+						this.mainWindow.showViewsMerlin(copied, data);
 						this.openedItems.add(data);
 						this.closedItems.remove(data);
 					} else {
@@ -369,7 +369,7 @@ public class Workbench implements IGenericGUI, ClipboardListener {
 						 * Data have never been showed before. We have to show it
 						 * and add a node in the tree.
 						 */
-						this.mainWindow.showViews(copied, data);
+						this.mainWindow.showViewsMerlin(copied, data);
 						this.openedItems.add(data);
 
 					}
