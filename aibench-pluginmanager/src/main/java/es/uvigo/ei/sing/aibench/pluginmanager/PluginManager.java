@@ -111,9 +111,11 @@ public final class PluginManager implements PluginDownloadListener{
 	}
 	
 	public final static PluginManager getInstance() {
+		
 		if (PluginManager.instance == null) {
 			PluginManager.createInstance();
 		}
+		
 		return PluginManager.instance;
 	}
 	
@@ -249,12 +251,7 @@ public final class PluginManager implements PluginDownloadListener{
 	
 	public List<Plugin> getActivePlugins() {
 		ArrayList<Plugin> active = new ArrayList<Plugin>(this.pluginEngine.getLoadedPlugins());
-		System.out.println("b " + active.size());
-		System.out.println(active);
 		active.retainAll(this.pluginEngine.getResolvedPlugins());
-		
-		System.out.println("c " + active.size());
-		System.out.println(active);
 		
 		return active;
 	}
@@ -892,6 +889,7 @@ public final class PluginManager implements PluginDownloadListener{
 	{
 		// Refresh Settings
 		PluginManager.getInstance().getPluginDownloader().downloadInfo(false, hasTimeout);
+		
 		List<Plugin> toUpdate = new ArrayList<Plugin>();
 		Collection<PluginInfo> repository = getPluginDownloader().getPluginsInfo();
 		for(PluginInfo pluginInfo:repository)

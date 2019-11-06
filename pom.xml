@@ -72,7 +72,7 @@
 		<!-- merlin -->
 		<merlin.plugins.directory>${project.basedir}/../../merlin-aibench/plugins</merlin.plugins.directory>
 		<merlin.lib.directory>${project.basedir}/../../merlin-aibench/lib</merlin.lib.directory>
-		<merlin.version>4.0.2</merlin.version>
+		<merlin.version>2.10.2</merlin.version>
 		<!-- General -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>

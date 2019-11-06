@@ -37,7 +37,7 @@
 		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.AddNewPlugins">
 			<operation-description 
 				name="Repository Manager" 
-				path="100000010@Help" 
+				path="100000010@help" 
 				uid="aibench.pluginmanager.loadplugins"
 			/>
 	    </extension>
@@ -54,7 +54,7 @@
 		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.UpdateAllPlugins">
 			<operation-description 
 				name="Updates" 
-				path="100000011@Help" 
+				path="100000011@help" 
 				uid="aibench.pluginmanager.updates"
 			/>
 	    </extension>

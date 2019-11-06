@@ -64,6 +64,7 @@ public class PluginDownloader {
 	 * 
 	 */
 	private static final int BUFFER_SIZE = 8192;
+	private static final int DEFAULT_TIMEOUT = 5;
 
 	/**
 	 * 
@@ -744,11 +745,16 @@ public class PluginDownloader {
 	}
 
 	public int getTimeout() {
+		
 		return this.timeout*1000;
 	}
 	
 	public void setTimeout(int timeout) {
-		this.timeout = timeout;
+		
+		if(timeout < 0)
+			this.timeout = DEFAULT_TIMEOUT;
+		else
+			this.timeout = timeout;
 	}
 	
 	public void setBackupHost(String backupHost) {

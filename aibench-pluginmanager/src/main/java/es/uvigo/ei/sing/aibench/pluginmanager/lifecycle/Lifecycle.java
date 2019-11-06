@@ -27,7 +27,6 @@ public class Lifecycle extends PluginLifecycle {
 	
 	
 	public void start(){
-		
 		try {
 			if(PluginManager.getInstance().isStartAutoUpdates() && PluginManager.getInstance().existUpdatesFromRepository(true).size() > 0)
 			{

@@ -68,7 +68,7 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<!-- aibench core libraries -->
-					<execution>
+					<!-- <execution>
 						<id>copy-dependencies-aibench-lib</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -82,10 +82,10 @@
 							<includeArtifactIds>${aibench.lib.artifactIds}</includeArtifactIds>
 							<includeScope>runtime</includeScope>
 						</configuration>
-					</execution>
+					</execution> -->
 
 					<!-- aibench plugins -->
-					<execution>
+					<!-- <execution>
 						<id>copy-dependencies-aibench-plugins</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -99,10 +99,10 @@
 							<includeArtifactIds>${aibench.plugins.artifactIds}</includeArtifactIds>
 							<includeScope>runtime</includeScope>
 						</configuration>
-					</execution>
+					</execution> -->
 
 					<!-- rest of dependencies inside current aibench plugin -->
-					<execution>
+					<!-- <execution>
 						<id>copy-dependencies-plugin-dependencies</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -116,7 +116,7 @@
 							<excludeArtifactIds>${aibench.plugins.artifactIds},${aibench.lib.artifactIds}</excludeArtifactIds>
 							<includeScope>runtime</includeScope>
 						</configuration>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 			<plugin>
