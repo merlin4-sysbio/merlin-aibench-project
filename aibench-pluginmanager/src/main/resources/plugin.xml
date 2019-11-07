@@ -36,11 +36,17 @@
 	<!-- Add New Plugisn -->
 		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.AddNewPlugins">
 			<operation-description 
-				name="Repository Manager" 
-				path="100000010@help" 
+				name="repository manager" 
+				path="70@settings/"
 				uid="aibench.pluginmanager.loadplugins"
 			/>
 	    </extension>
+	    
+	   <extension uid="aibench.workbench"
+			name="aibench.workbench.view">
+			<icon-operation operation="aibench.pluginmanager.loadplugins"
+				icon="icons/Lifecycle/repo_manager.png" />
+		</extension>
 	    
 	    <extension uid="aibench.workbench" name="aibench.workbench.view" >
 			<gui-operation  
@@ -53,8 +59,8 @@
 	
 		<extension uid="aibench.core" name="aibench.core.operation-definition" class="es.uvigo.ei.sing.aibench.pluginmanager.operations.UpdateAllPlugins">
 			<operation-description 
-				name="Updates" 
-				path="100000011@help" 
+				name="updates" 
+				path="80@settings/"
 				uid="aibench.pluginmanager.updates"
 			/>
 	    </extension>
@@ -64,6 +70,12 @@
 				operation="aibench.pluginmanager.updates" 
 				class="es.uvigo.ei.sing.aibench.pluginmanager.gui2.UpdateAllPluginsGUI"
 				/>
+		</extension>
+		
+		<extension uid="aibench.workbench"
+			name="aibench.workbench.view">
+			<icon-operation operation="aibench.pluginmanager.updates" 
+				icon="icons/Lifecycle/synchronize.png" />
 		</extension>
 		
 		

@@ -248,11 +248,11 @@ public class PluginInformationPane extends JScrollPane {
 			if (!adapter.isSelected()) {
 				Color ok, error, disabled;
 				if (adapter.getDepth() == 1) {
-					ok = new Color(215, 250, 45);
+					ok = new Color(0, 128, 128);
 					error = new Color(204, 0, 20);
 					disabled = new Color(105,105,105);
 				} else {
-					ok = new Color(215, 224, 40);
+					ok = new Color(0, 128, 128);
 					error = new Color(230, 80, 70);
 					disabled = new Color(150,150,150);
 				}

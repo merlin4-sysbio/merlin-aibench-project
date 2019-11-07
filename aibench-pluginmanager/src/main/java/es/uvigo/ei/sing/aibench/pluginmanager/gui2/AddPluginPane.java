@@ -293,9 +293,9 @@ public class AddPluginPane extends JPanel{
 		@Override
 		protected void applyBackground(Component renderer, ComponentAdapter adapter) {
 			if (!adapter.isSelected()) {				
-				Color installable = new Color(215, 250, 45);
+				Color installable = new Color(0, 128, 128);
 				Color updatable = new Color(100, 200, 100);
-				Color depInstallable = new Color(215, 224, 40);
+				Color depInstallable = new Color(0, 128, 128);
 				Color depUpdatable = new Color(150, 220, 150);
 				Color depLost = new Color(200, 125, 125);
 				

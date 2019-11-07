@@ -58,7 +58,7 @@ public class OperationWrapper extends AbstractAction {
 	}
 
 	private String getSuspensionPoints() {
-		return isAddSuspensionPoints() ? "..." : "";
+		return isAddSuspensionPoints() ? "" : "";
 	}
 
 	private boolean isAddSuspensionPoints() {
