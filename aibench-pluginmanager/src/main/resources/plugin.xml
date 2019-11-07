@@ -23,7 +23,7 @@
 <plugin start="false">
 	<uid>aibench.pluginmanager</uid>
 	<name>AIBench Plugin Manager</name>
-	<version>${merlin.version}</version>
+	<version>2.10.2</version>
 	<lifecycleclass>es.uvigo.ei.sing.aibench.pluginmanager.lifecycle.Lifecycle</lifecycleclass>
 	
 	<dependencies>

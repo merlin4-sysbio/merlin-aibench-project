@@ -23,7 +23,7 @@
 <plugin start="true" startOrder="0">
 	<uid>aibench.core</uid>
 	<name>AIBench Core</name>
-	<version>${merlin.version}</version>
+	<version>2.10.2</version>
 	
 	<lifecycleclass>es.uvigo.ei.aibench.core.CoreLifecycle</lifecycleclass>
 	
