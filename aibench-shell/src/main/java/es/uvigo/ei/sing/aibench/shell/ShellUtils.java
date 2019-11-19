@@ -27,7 +27,6 @@ import java.util.List;
 
 import bsh.EvalError;
 import bsh.Interpreter;
-
 import es.uvigo.ei.aibench.core.Core;
 import es.uvigo.ei.aibench.core.clipboard.Clipboard;
 import es.uvigo.ei.aibench.core.clipboard.ClipboardItem;

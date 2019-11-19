@@ -59,7 +59,6 @@ import es.uvigo.ei.aibench.repository.PluginDownloadEvent;
 import es.uvigo.ei.aibench.repository.PluginDownloadListener;
 import es.uvigo.ei.aibench.workbench.InputGUI;
 import es.uvigo.ei.aibench.workbench.ParamsReceiver;
-import es.uvigo.ei.aibench.workbench.Workbench;
 import es.uvigo.ei.aibench.workbench.utilities.Utilities;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
 import es.uvigo.ei.sing.aibench.pluginmanager.gui.PluginActionProvider;

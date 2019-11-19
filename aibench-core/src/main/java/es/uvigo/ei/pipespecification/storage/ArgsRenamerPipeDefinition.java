@@ -24,8 +24,8 @@ package es.uvigo.ei.pipespecification.storage;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import es.uvigo.ei.aibench.core.operation.execution.Executable;
 import es.uvigo.ei.aibench.core.operation.execution.IncompatibleConstraintsException;

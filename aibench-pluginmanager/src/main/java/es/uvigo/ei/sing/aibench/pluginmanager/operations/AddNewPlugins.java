@@ -29,8 +29,6 @@ along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
 package es.uvigo.ei.sing.aibench.pluginmanager.operations;
 
 import es.uvigo.ei.aibench.core.operation.annotation.Operation;
-import es.uvigo.ei.aibench.core.operation.annotation.Progress;
-import es.uvigo.ei.sing.aibench.pluginmanager.gui.WaitingGUI;
 
 /**
  * 

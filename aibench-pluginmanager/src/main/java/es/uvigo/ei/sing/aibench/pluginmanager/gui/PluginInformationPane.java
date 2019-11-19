@@ -54,10 +54,8 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import org.jdesktop.swingx.treetable.TreeTableNode;
 import org.platonos.pluginengine.Dependency;
 import org.platonos.pluginengine.Plugin;
-import org.platonos.pluginengine.PluginEngine;
 import org.platonos.pluginengine.PluginEngineException;
 
-import es.uvigo.ei.aibench.Launcher;
 import es.uvigo.ei.aibench.repository.info.PluginInfo;
 import es.uvigo.ei.sing.aibench.pluginmanager.PluginManager;
 import es.uvigo.ei.sing.aibench.pluginmanager.gui2.NeedsRestartListener;
