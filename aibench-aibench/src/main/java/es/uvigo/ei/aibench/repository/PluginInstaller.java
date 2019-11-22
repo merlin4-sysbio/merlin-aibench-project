@@ -473,7 +473,6 @@ public class PluginInstaller {
 			File output =  new File(this.baseApplicationDir,folder);
 			File depFile =  new File(uidInstallDir,dep);
 			
-			
 //			System.out.println("out: " + output.getAbsolutePath()+ "\t" +output.exists());
 //			System.out.println("depFile: " + depFile.getAbsolutePath() + "\t" +depFile.exists());
 			
