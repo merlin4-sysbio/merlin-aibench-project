@@ -73,6 +73,8 @@
 		<merlin.plugins.directory>${project.basedir}/../../merlin-aibench/plugins</merlin.plugins.directory>
 		<merlin.lib.directory>${project.basedir}/../../merlin-aibench/lib</merlin.lib.directory>
 		<merlin.version>2.10.2</merlin.version>
+		<slf4j.version>1.8.0-beta4</slf4j.version>
+		
 		<!-- General -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>

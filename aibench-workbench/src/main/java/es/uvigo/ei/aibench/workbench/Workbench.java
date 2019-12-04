@@ -1568,21 +1568,21 @@ public class Workbench implements IGenericGUI, ClipboardListener {
 		}
 		
 		// Log Area
-		String logAreaVisible = CONFIG.getProperty("logarea.visible");
-		if (logAreaVisible == null || !logAreaVisible.equals("false")) {
-			String logAreaSlot = CONFIG.getProperty("logarea.slot");
-			if (logAreaSlot == null) logAreaSlot = "bottom";			
-			putItemInSlot(logAreaSlot, "Log", "aibench.log", createLogTextArea());
+//		String logAreaVisible = CONFIG.getProperty("logarea.visible");
+//		if (logAreaVisible == null || !logAreaVisible.equals("false")) {
+//			String logAreaSlot = CONFIG.getProperty("logarea.slot");
+//			if (logAreaSlot == null) logAreaSlot = "bottom";			
+//			putItemInSlot(logAreaSlot, "Log", "aibench.log", createLogTextArea());
 			
-			if (CONFIG.getProperty("logarea.maxsize")!=null) {
-				try{
-					int maxSize = Integer.parseInt(CONFIG.getProperty("logarea.maxsize"));
-					TextAreaAppender.MAXSIZE = maxSize;
-				}catch(NumberFormatException e) {
-					LOGGER.warn("logarea.maxsize should be integer");
-				}
-			}
-		}
+//			if (CONFIG.getProperty("logarea.maxsize")!=null) {
+//				try{
+//					int maxSize = Integer.parseInt(CONFIG.getProperty("logarea.maxsize"));
+//					TextAreaAppender.MAXSIZE = maxSize;
+//				}catch(NumberFormatException e) {
+//					LOGGER.warn("logarea.maxsize should be integer");
+//				}
+//			}
+//		}
 		
 		// Memory Monitor
 		String memoryVisible = CONFIG.getProperty("memorymonitor.visible");
@@ -1592,11 +1592,11 @@ public class Workbench implements IGenericGUI, ClipboardListener {
 			putItemInSlot(memorySlot, "Memory", "aibench.memory", new MemoryMonitor());		
 		}
 	}
-	private JComponent createLogTextArea() {
-		JComponent logArea = TextAreaAppender.getGUIComponent();
-		logArea.setPreferredSize(new Dimension(200, 100));
-		return logArea;
-	}
+//	private JComponent createLogTextArea() {
+//		JComponent logArea = TextAreaAppender.getGUIComponent();
+//		logArea.setPreferredSize(new Dimension(200, 100));
+//		return logArea;
+//	}
 	
 	private void createInputGUIMappings() {
 		for (Extension extension : WorkbenchExtensionTools.getWorkbenchViewExtensions()) {

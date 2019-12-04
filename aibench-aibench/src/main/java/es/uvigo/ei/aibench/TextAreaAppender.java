@@ -100,29 +100,29 @@ public class TextAreaAppender extends AppenderSkeleton {
         Font f = defaultFont;
         Color c = defaultColor;
 
-        if (pane != null) {
-        	
-            this.layout.format(arg0);
-
-            if (arg0.getLevel().equals(Level.DEBUG)) {
-                f = DEBUGFont;
-                c = DEBUGColor;
-            } else if (arg0.getLevel().equals(Level.INFO)) {
-                f = INFOFont;
-                c = INFOColor;
-            } else if (arg0.getLevel().equals(Level.WARN)) {
-                f = WARNFont;
-                c = WARNColor;
-            } else if (arg0.getLevel().equals(Level.ERROR)) {
-                f = ERRORFont;
-                c = ERRORColor;
-            } else if (arg0.getLevel().equals(Level.FATAL)) {
-                f = FATALFont;
-                c = FATALColor;
-            }
-
-            this.appendText(this.getLayout().format(arg0), f, c);
-        }
+//        if (pane != null) {
+//        	
+//            this.layout.format(arg0);
+//
+//            if (arg0.getLevel().equals(Level.DEBUG)) {
+//                f = DEBUGFont;
+//                c = DEBUGColor;
+//            } else if (arg0.getLevel().equals(Level.INFO)) {
+//                f = INFOFont;
+//                c = INFOColor;
+//            } else if (arg0.getLevel().equals(Level.WARN)) {
+//                f = WARNFont;
+//                c = WARNColor;
+//            } else if (arg0.getLevel().equals(Level.ERROR)) {
+//                f = ERRORFont;
+//                c = ERRORColor;
+//            } else if (arg0.getLevel().equals(Level.FATAL)) {
+//                f = FATALFont;
+//                c = FATALColor;
+//            }
+//
+//            this.appendText(this.getLayout().format(arg0), f, c);
+//        }
     }
 
     private void appendText(String text, Font font, Color c) {

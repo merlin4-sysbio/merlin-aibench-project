@@ -48,7 +48,7 @@ import es.uvigo.ei.aibench.repository.PluginInstaller;
  */
 public class Launcher {
 	private static Logger logger = Logger.getLogger(Launcher.class);
-
+	
 	/**
 	 * Configuration of the aibench basic runtime. By default, the configuration is located in aibench.conf file
 	 */
