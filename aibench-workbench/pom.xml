@@ -93,7 +93,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>../../merlin-aibench/plugins_bin/merlin-aibench-workbench</outputDirectory>
+							<outputDirectory>${merlin.plugins_bin.directory}/merlin-aibench-workbench</outputDirectory>
 							<resources>
 								<resource>
 									<directory>${project.build.directory}/dist/plugins_bin/${project.artifactId}</directory>

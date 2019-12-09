@@ -127,6 +127,9 @@ final class StartPluginQueue {
 					engineEvent.setPayload(plugin);
 					pluginEngine.firePluginEngineEvent(engineEvent);
 				} catch (RuntimeException ex) {
+					ex.printStackTrace();
+					System.out.println("ex cause "+ex.getCause());
+					System.out.println("ex message "+ex.getMessage());
 					// Must catch RuntimeException or the pool could leak threads.
 					pluginEngine.getLogger().log(LoggerLevel.SEVERE, "Uncaught exception during Plugin start: " + plugin, ex);
 				}

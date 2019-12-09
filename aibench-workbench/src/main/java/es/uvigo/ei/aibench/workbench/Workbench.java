@@ -66,7 +66,6 @@ import org.apache.log4j.Logger;
 import org.platonos.pluginengine.Extension;
 import org.platonos.pluginengine.PluginXmlNode;
 
-import es.uvigo.ei.aibench.TextAreaAppender;
 import es.uvigo.ei.aibench.Util;
 import es.uvigo.ei.aibench.core.Core;
 import es.uvigo.ei.aibench.core.CoreListener;

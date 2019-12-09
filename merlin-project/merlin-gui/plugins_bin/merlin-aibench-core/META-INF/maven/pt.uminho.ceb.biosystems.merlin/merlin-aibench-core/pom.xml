@@ -13,18 +13,16 @@
 
 			This will change the version in all modules at-once
 		-->
-
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>merlin-aibench-pluginmanager</artifactId>
+	<artifactId>merlin-aibench-core</artifactId>
 	<packaging>jar</packaging>
-	<name>The AIBench Plugin Manager Plugin</name>
+	<name>The AIBench Core Plugin</name>
 	<url>http://www.aibench.org</url>
 
 	<properties>
 		<aibench.lib.artifactIds>javatar,aibench-aibench,jhall,log4j</aibench.lib.artifactIds>
-		<aibench.plugins.artifactIds>aibench-core,aibench-workbench</aibench.plugins.artifactIds>
 		<globalResourcesDirectory>src/main/global-resources</globalResourcesDirectory>
 	</properties>
 
@@ -34,79 +32,12 @@
 			<artifactId>merlin-aibench-aibench</artifactId>
 			<scope>compile</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>merlin-aibench-core</artifactId>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>merlin-aibench-workbench</artifactId>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>batik</groupId>
-			<artifactId>batik-swing</artifactId>
-			<version>1.6</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-ext</artifactId>
-			<version>1.7</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>batik</groupId>
-			<artifactId>batik-awt-util</artifactId>
-			<version>1.6</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swing-worker</artifactId>
-			<version>1.1</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1</version>
-			<scope>runtime</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<directory>${project.basedir}/target</directory>
 		<outputDirectory>${project.build.directory}/dist/plugins_bin/${project.artifactId}</outputDirectory>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<excludePackageNames>org.jdesktop.*</excludePackageNames>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -131,32 +62,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>merlin-aibench-workbench</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${merlin.plugins_bin.directory}/merlin-aibench-pluginmanager</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/dist/plugins_bin/${project.artifactId}</directory>
-									<filtering>false</filtering>
-								</resource>
-								<resource>
-									<directory>src/main/resources</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -176,10 +82,10 @@
 							<includeArtifactIds>${aibench.lib.artifactIds}</includeArtifactIds>
 							<includeScope>runtime</includeScope>
 						</configuration>
-					</execution>
+					</execution> -->
 
-					aibench plugins
-					<execution>
+					<!-- aibench plugins -->
+					<!-- <execution>
 						<id>copy-dependencies-aibench-plugins</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -193,10 +99,10 @@
 							<includeArtifactIds>${aibench.plugins.artifactIds}</includeArtifactIds>
 							<includeScope>runtime</includeScope>
 						</configuration>
-					</execution>
+					</execution> -->
 
-					rest of dependencies inside current aibench plugin
-					<execution>
+					<!-- rest of dependencies inside current aibench plugin -->
+					<!-- <execution>
 						<id>copy-dependencies-plugin-dependencies</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -211,6 +117,32 @@
 							<includeScope>runtime</includeScope>
 						</configuration>
 					</execution> -->
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>merlin-aibench-workbench</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>../../merlin-aibench/plugins_bin/merlin-aibench-core</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/dist/plugins_bin/${project.artifactId}</directory>
+									<filtering>false</filtering>
+								</resource>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

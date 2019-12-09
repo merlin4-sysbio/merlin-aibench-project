@@ -70,8 +70,9 @@
 
 	<properties>
 		<!-- merlin -->
-		<merlin.plugins.directory>${project.basedir}/../../merlin-aibench/plugins</merlin.plugins.directory>
-		<merlin.lib.directory>${project.basedir}/../../merlin-aibench/lib</merlin.lib.directory>
+		<merlin.plugins.directory>${project.basedir}/../../merlin-project/merlin-gui/plugins</merlin.plugins.directory>
+		<merlin.lib.directory>${project.basedir}/../../merlin-project/merlin-gui/lib</merlin.lib.directory>
+		<merlin.plugins_bin.directory>${project.basedir}/../../merlin-project/merlin-gui/plugins_bin</merlin.plugins_bin.directory>
 		<merlin.version>4.0.2-RELEASE</merlin.version>
 		<slf4j.version>1.8.0-beta4</slf4j.version>
 		
