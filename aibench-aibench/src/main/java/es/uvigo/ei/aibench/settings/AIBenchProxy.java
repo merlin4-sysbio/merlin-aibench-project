@@ -1,33 +1,33 @@
-///*
-//Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
-//
-//
-//This file is part of the AIBench Project. 
-//
-//AIBench Project is free software: you can redistribute it and/or modify
-//it under the terms of the GNU Lesser Public License as published by
-//the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
-//
-//AIBench Project is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU Lesser Public License for more details.
-//
-//You should have received a copy of the GNU Lesser Public License
-//along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
-//*/
-//
-///*  
-// * AIBenchProxy.java
-// *
-// * Created inside the SING research group (http://sing.ei.uvigo.es)
-// * University of Vigo
-// *
-// * Created on 15 de Abr de 2014
-// */
-//package es.uvigo.ei.aibench.settings;
-//
+/*
+Copyright 2007 Daniel Gonzalez Peña, Florentino Fernandez Riverola
+
+
+This file is part of the AIBench Project. 
+
+AIBench Project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AIBench Project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with AIBench Project.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  
+ * AIBenchProxy.java
+ *
+ * Created inside the SING research group (http://sing.ei.uvigo.es)
+ * University of Vigo
+ *
+ * Created on 15 de Abr de 2014
+ */
+package es.uvigo.ei.aibench.settings;
+
 //import java.io.IOException;
 //import java.net.Proxy;
 //import java.net.URI;
@@ -38,10 +38,10 @@
 //
 //import es.uvigo.ei.aibench.Paths;
 //import es.uvigo.ei.aibench.workbench.Workbench;
-//
-//
-//public class AIBenchProxy {
-//	
+
+
+public class AIBenchProxy {
+	
 //	private static AIBenchProxy _instance;
 //	private final String urltest= "http://www.google.com:80";
 //	private Proxy proxy;
@@ -163,5 +163,5 @@
 //		}
 //		return t; 
 //	}
-//
-//}
+
+}
